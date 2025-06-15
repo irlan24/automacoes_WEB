@@ -1,5 +1,6 @@
 from playwright.sync_api import sync_playwright
 from time import sleep
+from senhas import login, senha
 
 
 
@@ -23,9 +24,9 @@ with sync_playwright() as p:
 
 
     # login
-    page.fill('id=i0116', "irlan.silva@credcesta.com.br")
+    page.fill('id=i0116', login)
     page.click('input[type="submit"]')
-    page.fill('id=i0118', "!!Lan886120")
+    page.fill('id=i0118', senha)
     page.click('input[type="submit"]')
 
     # botao iniciar agora
