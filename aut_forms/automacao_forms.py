@@ -1,6 +1,6 @@
 from playwright.sync_api import sync_playwright
 from time import sleep
-from senhas import login, senha
+from senhas import login, senha, link_forms
 
 
 
@@ -17,7 +17,7 @@ with sync_playwright() as p:
         record_video_dir="videos/",
         record_video_size={"width": 1280, "height": 720})
     page =  context.new_page()
-    page.goto("https://forms.office.com/Pages/ResponsePage.aspx?id=g0JDTVqwv0K-xcZB1cHInb1x76whDHhCnj8r1tIU7QRUQTNJWUgyN1BUT0xBS01KUzc0SlcwWTM2Mi4u", wait_until="load")
+    page.goto(link_forms, wait_until="load")
 
     # Caso queira fazer um vídeo do funcionamento
     page.video.path()
