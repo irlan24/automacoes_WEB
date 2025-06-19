@@ -105,7 +105,7 @@ def forms():
         page.click('input[value="Aberto"]')
 
         # Para o status
-        page.click('input[value="Finalizado por Automação"]')
+        page.click('input[value="Finalizado"]')
 
         # Demanda que precisa de nossa atuação
         page.click('input[value="SIM, demanda dentro do nosso escopo e necessitava de análise em Segundo Nível"]')
