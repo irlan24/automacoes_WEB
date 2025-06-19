@@ -1,8 +1,6 @@
 from playwright.sync_api import sync_playwright
 from time import sleep
 import customtkinter as ctk
-import sys
-sys.path.append(r'C:\Users\irlan\OneDrive\Documentos\Python_automacao\playwright\aut_in_git')
 from senhas import *
 
 
