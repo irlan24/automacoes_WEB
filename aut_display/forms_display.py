@@ -7,11 +7,6 @@ from senhas import *
 
 
 
-
-
-
-
-
 def forms():
     with sync_playwright() as p:
         navegador = p.chromium.launch(headless=False) # headless=False
@@ -19,7 +14,7 @@ def forms():
         #     record_video_dir="videos/",
         #     record_video_size={"width": 1280, "height": 720})
         page =  navegador.new_page()
-        page.goto(link_forms, timeout=3000)
+        page.goto(link_forms, wait_until='load')
 
         # Caso queira fazer um vídeo do funcionamento
         # page.video.path()
