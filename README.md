@@ -19,7 +19,7 @@ Essa automação foi desenvolvida para preencher todos os tópicos de um formul�
 Número do Caso/ticket -> Simboliza o identificador (protocolo) para localizar a demanda específica que foi aberta pelo cliente em questão.
 Para esse preenchimento, foi usado um arquivo.txt, que contem todos os casos que serão enviados via formulário.
 
-Número do CPF (dado sensível) -> Simboliza o CPF pelo cliente vinculado à abertura do Caso.
+Número do CPF (dado sensível) -> Simboliza o CPF do cliente vinculado à abertura do Caso.
 Para esse preenchimento, foi usado um arquivo.txt, que contem todos os CPF, em mesma ordem dos Casos, que serão enviados via formulário.
 
 ---------------
