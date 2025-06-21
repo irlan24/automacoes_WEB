@@ -6,6 +6,16 @@ from senhas import *
 
 
 def forms():
+
+    def texto_temporario(text_display='', color_display=''):
+        texto_original = invisible_element.cget("text")
+
+        invisible_element.configure(text=text_display, text_color=color_display)
+
+        app.after(4000, lambda: invisible_element.configure(text=texto_original))
+
+
+
     with sync_playwright() as p:
         navegador = p.chromium.launch(headless=False) # headless=False
         # context = navegador.new_context(
@@ -115,7 +125,8 @@ def forms():
         if validator_element.is_visible():
             invisible_element.configure(text="Formulário enviado com sucesso!", text_color="green")
         else:
-            invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+            texto_temporario("Formulário não foi ENVIADO!", "red")
+            # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
             
         
     
@@ -173,7 +184,7 @@ label_assunto.pack(pady=10)
 campo_assunto = ctk.CTkEntry(app,width=250,placeholder_text='Digite o assunto...')
 campo_assunto.pack(pady=10)
 
-
+# ========================================
 
 # Botão Submit
 submit = ctk.CTkButton(app, text='Submit', command=forms)
@@ -182,8 +193,10 @@ submit.pack(pady=10)
 # ========================================
 
 # campo para controle de retorno e notificações
-invisible_element = ctk.CTkLabel(app, text='')
+invisible_element = ctk.CTkLabel(app, text='', font=("Arial", 18, "bold"))
 invisible_element.pack(pady=10)
+
+
 
 
 
