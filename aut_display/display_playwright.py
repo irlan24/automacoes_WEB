@@ -37,33 +37,45 @@ def forms():
         if produto == '':
             invisible_element.configure(text="Campo Produto está em branco!\nDigite novamente!", text_color="red")
         else:
-            produto = int(campo_produto.get())
-            
-            match produto:
-                case 1:
-                    produto = produto_1
-                case 2:
-                    produto = produto_2
-                case _:
-                    invisible_element.configure(text="Nenhuma das opções digitadas para o Produto\nInsira novamente!", text_color="red")
+            try:
+                produto = int(campo_produto.get())
+                
+                match produto:
+                    case 1:
+                        produto = produto_1
+                    case 2:
+                        produto = produto_2
+                    case _:
+                        invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
+                        page.exit()
+                        
+            except:
+                invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
+                page.exit()
 
         # Condições e opções para os Assuntos
         if assunto == '':
             invisible_element.configure(text="Campo Assunto está em branco!\nDigite novamente!", text_color="red")
         else:
-            assunto = int(campo_assunto.get())
-            
-            match assunto:
-                case 1:
-                    assunto = assunto_1
-                case 2:
-                    assunto = assunto_2
-                case 3:
-                    assunto = assunto_3
-                case 4:
-                    assunto = assunto_4
-                case _:
-                    invisible_element.configure(text="Nenhuma das opções digitadas para o Assunto\nInsira novamente!", text_color="red")
+            try:
+
+                assunto = int(campo_assunto.get())
+                
+                match assunto:
+                    case 1:
+                        assunto = assunto_1
+                    case 2:
+                        assunto = assunto_2
+                    case 3:
+                        assunto = assunto_3
+                    case 4:
+                        assunto = assunto_4
+                    case _:
+                        invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
+                        page.exit()
+            except:
+                invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
+                page.exit()
 
 
 
@@ -193,7 +205,7 @@ submit.pack(pady=10)
 # ========================================
 
 # campo para controle de retorno e notificações
-invisible_element = ctk.CTkLabel(app, text='', font=("Arial", 18, "bold"))
+invisible_element = ctk.CTkLabel(app, text='', font=("Arial", 15, "bold"))
 invisible_element.pack(pady=10)
 
 
