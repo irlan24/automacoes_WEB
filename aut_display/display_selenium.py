@@ -11,6 +11,7 @@ import threading
 
 def load():
     invisible_element.configure(text='CARREGANDO...', text_color="green")
+    submit.configure(state="disabled")
     progress_bar.pack(pady=8)
     progress_bar.start()
     threading.Thread(target=forms, daemon=True).start()
@@ -18,7 +19,7 @@ def load():
 
 
 def texto_temporario(text_display='', color_display=''):
-    texto_original = invisible_element.cget("text")
+    texto_original = ''
 
     invisible_element.configure(text=text_display, text_color=color_display)
 
@@ -40,10 +41,11 @@ def forms():
         invisible_element.configure(text="Campo Produto está em branco!\nDigite novamente!", text_color="red")
         progress_bar.stop()
         progress_bar.pack_forget()
+        submit.configure(state='normal')
         navegador.quit()
     else:
-        produto = int(campo_produto.get())
         try:
+            produto = int(campo_produto.get())
             match produto:
                 case 1:
                     produto = produto_1
@@ -53,11 +55,13 @@ def forms():
                     invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
                     progress_bar.stop()
                     progress_bar.pack_forget()
+                    submit.configure(state='normal')
                     navegador.quit()
         except:
             invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
             progress_bar.stop()
             progress_bar.pack_forget()
+            submit.configure(state='normal')
             navegador.quit()
 
 
@@ -68,6 +72,7 @@ def forms():
         invisible_element.configure(text="Campo Assunto está em branco!\nDigite novamente!", text_color="red")
         progress_bar.stop()
         progress_bar.pack_forget()
+        submit.configure(state='normal')
         navegador.quit()
     else:
         try:
@@ -86,11 +91,13 @@ def forms():
                     invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
                     progress_bar.stop()
                     progress_bar.pack_forget()
+                    submit.configure(state='normal')
                     navegador.quit()
         except:
             invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
             progress_bar.stop()
             progress_bar.pack_forget()
+            submit.configure(state='normal')
             navegador.quit()
 
 
@@ -117,6 +124,7 @@ def forms():
     usuario.send_keys(login)
 
     # clica no botão avançar
+    sleep(0.5)
     navegador.find_element("css selector", 'input[type="submit"]').click()
 
     # Espera o campo senha aparecer e digita nele
@@ -206,10 +214,10 @@ def forms():
 
     # Espera e clica no botão enviar formulário
 
-    submit = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
-    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit)
+    submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
+    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
     # CLICA NO BOTÃO ENVIAR FORMS
-    # navegador.execute_script("arguments[0].click();", submit)
+    # navegador.execute_script("arguments[0].click();", submit_button)
 
     # confirmação de envio de formulário no display
     try:
@@ -217,17 +225,19 @@ def forms():
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
         )
         progress_bar.stop()
-        progress_bar.pack_forget()
-        invisible_element.configure(text='')
+        progress_bar.pack_forget()        
         texto_temporario("Formulário enviado com sucesso!", "green")
+        submit.configure(state='normal')
         navegador.quit()
+        
     except: 
         progress_bar.stop()
-        progress_bar.pack_forget()
-        invisible_element.configure(text='')
+        progress_bar.pack_forget()        
         texto_temporario("Formulário não foi ENVIADO!", "red")
         # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
-        navegador.quit()  
+        submit.configure(state='normal')
+        navegador.quit()
+          
 
     
 
@@ -288,7 +298,7 @@ campo_assunto.pack(pady=8)
 # ========================================
 
 # Botão Submit
-submit = ctk.CTkButton(app, text='Submit', command=load)
+submit = ctk.CTkButton(app, text='ENVIAR', command=load)
 submit.pack(pady=8)
 
 # ========================================
