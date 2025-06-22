@@ -6,20 +6,27 @@ from selenium.webdriver.support import expected_conditions as EC
 from senhas import *
 from time import sleep
 import customtkinter as ctk
-import sys
+import threading
 
 
-# sys.path.append(caminho)
+def load():
+    invisible_element.configure(text='CARREGANDO...', text_color="green")
+    progress_bar.pack(pady=8)
+    progress_bar.start()
+    threading.Thread(target=forms, daemon=True).start()
 
-def forms():
 
-    def texto_temporario(text_display='', color_display=''):
-        texto_original = invisible_element.cget("text")
 
-        invisible_element.configure(text=text_display, text_color=color_display)
+def texto_temporario(text_display='', color_display=''):
+    texto_original = invisible_element.cget("text")
 
-        app.after(7000, lambda: invisible_element.configure(text=texto_original))
+    invisible_element.configure(text=text_display, text_color=color_display)
 
+    app.after(7000, lambda: invisible_element.configure(text=texto_original))
+
+
+
+def forms():    
 
 
     # Pegando indormações do display
@@ -31,6 +38,8 @@ def forms():
     # Condições e opções para os Produtos
     if produto == '':
         invisible_element.configure(text="Campo Produto está em branco!\nDigite novamente!", text_color="red")
+        progress_bar.stop()
+        progress_bar.pack_forget()
         navegador.quit()
     else:
         produto = int(campo_produto.get())
@@ -42,9 +51,13 @@ def forms():
                     produto = produto_2
                 case _:
                     invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
+                    progress_bar.stop()
+                    progress_bar.pack_forget()
                     navegador.quit()
         except:
             invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
+            progress_bar.stop()
+            progress_bar.pack_forget()
             navegador.quit()
 
 
@@ -53,6 +66,8 @@ def forms():
 
     if assunto == '':
         invisible_element.configure(text="Campo Assunto está em branco!\nDigite novamente!", text_color="red")
+        progress_bar.stop()
+        progress_bar.pack_forget()
         navegador.quit()
     else:
         try:
@@ -69,9 +84,13 @@ def forms():
                     assunto = assunto_4
                 case _:
                     invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
+                    progress_bar.stop()
+                    progress_bar.pack_forget()
                     navegador.quit()
         except:
             invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
+            progress_bar.stop()
+            progress_bar.pack_forget()
             navegador.quit()
 
 
@@ -197,10 +216,17 @@ def forms():
         validator_element = WebDriverWait(navegador, 3).until(
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
         )
+        progress_bar.stop()
+        progress_bar.pack_forget()
+        invisible_element.configure(text='')
         texto_temporario("Formulário enviado com sucesso!", "green")
         navegador.quit()
-    except:        
-        invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+    except: 
+        progress_bar.stop()
+        progress_bar.pack_forget()
+        invisible_element.configure(text='')
+        texto_temporario("Formulário não foi ENVIADO!", "red")
+        # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
         navegador.quit()  
 
     
@@ -218,58 +244,63 @@ app = ctk.CTk()
 app.title('Forms')
 
 # Definição da largura x altura do display
-app.geometry("350x640")
+app.geometry("350x650")
 
 # ========================================
 
 # Criando label Produto
-label_produto = ctk.CTkLabel(app, text='Digite o número do produto:\n\n[1] - Credcesta\n\n[2] - M fácil consignado')
-label_produto.pack(pady=10)
+label_produto = ctk.CTkLabel(app, text='Digite o número do produto:\n\n[1] - Credcesta\n\n[2] - M fácil consignado', font=("Arial", 13, "bold"))
+label_produto.pack(pady=8)
 
 # Campo do Produto
 campo_produto = ctk.CTkEntry(app, width= 250,placeholder_text='Digite o produto...')
-campo_produto.pack(pady=10)
+campo_produto.pack(pady=8)
 
 # ========================================
 
 # Criando label Caso
-label_caso = ctk.CTkLabel(app, text='Número do Caso: ')
-label_caso.pack(pady=10)
+label_caso = ctk.CTkLabel(app, text='Número do Caso: ', font=("Arial", 13, "bold"))
+label_caso.pack(pady=8)
 
 # Campo do Caso
 campo_caso = ctk.CTkEntry(app, width= 250,placeholder_text='Digite o número do Caso...')
-campo_caso.pack(pady=10)
+campo_caso.pack(pady=8)
 
 # ========================================
 
 # Criando label CPF
-label_cpf = ctk.CTkLabel(app, text='Número do CPF(apenas número): ')
-label_cpf.pack(pady=10)
+label_cpf = ctk.CTkLabel(app, text='Número do CPF(apenas número): ', font=("Arial", 13, "bold"))
+label_cpf.pack(pady=8)
 
 # Campo do CPF
 campo_cpf = ctk.CTkEntry(app, width= 250,placeholder_text='Digite o número do CPF...')
-campo_cpf.pack(pady=10)
+campo_cpf.pack(pady=8)
 
 # ========================================
 
 # Criando label Assunto principal
-label_assunto = ctk.CTkLabel(app, text='Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n\n[2] - Cancelamento de Seguro Prestamista\n\n[3] - Reembolso de desconto indevido de Saque\n\n[4] - Desacordo comercial')
-label_assunto.pack(pady=10)
+label_assunto = ctk.CTkLabel(app, text='Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n\n[2] - Cancelamento de Seguro Prestamista\n\n[3] - Reembolso de desconto indevido de Saque\n\n[4] - Desacordo comercial', font=("Arial", 13, "bold"))
+label_assunto.pack(pady=8)
 
 campo_assunto = ctk.CTkEntry(app,width=250,placeholder_text='Digite o assunto...')
-campo_assunto.pack(pady=10)
+campo_assunto.pack(pady=8)
 
-
+# ========================================
 
 # Botão Submit
-submit = ctk.CTkButton(app, text='Submit', command=forms)
-submit.pack(pady=10)
+submit = ctk.CTkButton(app, text='Submit', command=load)
+submit.pack(pady=8)
+
+# ========================================
+# Campo de barra de progresso
+progress_bar = ctk.CTkProgressBar(app, width=200, corner_radius=10, progress_color="green", border_width=10, fg_color="blue", height=10)
+
 
 # ========================================
 
 # campo para controle de retorno e notificações
 invisible_element = ctk.CTkLabel(app, text='', font=("Arial", 15, "bold"))
-invisible_element.pack(pady=10)
+invisible_element.pack(pady=8)
 
 
 # Manter display aberto
