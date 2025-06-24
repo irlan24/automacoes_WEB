@@ -6,13 +6,14 @@ from selenium.webdriver.support import expected_conditions as EC
 from senhas import *
 from time import sleep
 import customtkinter as ctk
+import tkinter.font as tkFont
 import threading
 
 
 def load():
     invisible_element.configure(text='CARREGANDO...', text_color="green")
     submit.configure(state="disabled")
-    progress_bar.pack(pady=8)
+    progress_bar.grid(row=10, column=0, pady=8, padx=10)
     progress_bar.start()
     threading.Thread(target=forms, daemon=True).start()
 
@@ -40,7 +41,7 @@ def forms():
     if produto == '':
         invisible_element.configure(text="Campo Produto está em branco!\nDigite novamente!", text_color="red")
         progress_bar.stop()
-        progress_bar.pack_forget()
+        progress_bar.grid_forget()
         submit.configure(state='normal')
         navegador.quit()
     else:
@@ -54,13 +55,13 @@ def forms():
                 case _:
                     invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
                     progress_bar.stop()
-                    progress_bar.pack_forget()
+                    progress_bar.grid_forget()
                     submit.configure(state='normal')
                     navegador.quit()
         except:
             invisible_element.configure(text="Opção inválida para o Produto\nInsira novamente!", text_color="red")
             progress_bar.stop()
-            progress_bar.pack_forget()
+            progress_bar.grid_forget()
             submit.configure(state='normal')
             navegador.quit()
 
@@ -71,7 +72,7 @@ def forms():
     if assunto == '':
         invisible_element.configure(text="Campo Assunto está em branco!\nDigite novamente!", text_color="red")
         progress_bar.stop()
-        progress_bar.pack_forget()
+        progress_bar.grid_forget()
         submit.configure(state='normal')
         navegador.quit()
     else:
@@ -90,13 +91,13 @@ def forms():
                 case _:
                     invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
                     progress_bar.stop()
-                    progress_bar.pack_forget()
+                    progress_bar.grid_forget()
                     submit.configure(state='normal')
                     navegador.quit()
         except:
             invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
             progress_bar.stop()
-            progress_bar.pack_forget()
+            progress_bar.grid_forget()
             submit.configure(state='normal')
             navegador.quit()
 
@@ -225,14 +226,14 @@ def forms():
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
         )
         progress_bar.stop()
-        progress_bar.pack_forget()        
+        progress_bar.grid_forget()        
         texto_temporario("Formulário enviado com sucesso!", "green")
         submit.configure(state='normal')
         navegador.quit()
         
     except: 
         progress_bar.stop()
-        progress_bar.pack_forget()        
+        progress_bar.grid_forget()        
         texto_temporario("Formulário não foi ENVIADO!", "red")
         # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
         submit.configure(state='normal')
@@ -243,6 +244,7 @@ def forms():
 
 # ========== DISPLAY APP ============
 
+#=============== CONFIGURAÇÕES ===========
 
 # aparencia
 ctk.set_appearance_mode('dark')
@@ -254,63 +256,102 @@ app = ctk.CTk()
 app.title('Forms')
 
 # Definição da largura x altura do display
-app.geometry("350x650")
+app.geometry("650x650")
+
+# Criando uma fonte para títulos
+fonte = ctk.CTkFont(family="Arial", size=15, weight="bold", slant="italic", underline=True)
 
 # ========================================
 
+
+# =========== BARRA MAIN / CENTRAL  ===========
+
+# Container da barra central do app
+box_frame_center = ctk.CTkFrame(master=app, corner_radius=10)
+box_frame_center.grid(row=0, column=1, padx=15, pady=10)
+
+
+
+
 # Criando label Produto
-label_produto = ctk.CTkLabel(app, text='Digite o número do produto:\n\n[1] - Credcesta\n\n[2] - M fácil consignado', font=("Arial", 13, "bold"))
-label_produto.pack(pady=8)
+label_produto = ctk.CTkLabel(box_frame_center, text='Digite o número do produto:\n\n[1] - Credcesta\n\n[2] - M fácil consignado', font=("Arial", 13, "bold"))
+label_produto.grid(row=0, column=0, pady=8, padx=10, sticky="n")
 
 # Campo do Produto
-campo_produto = ctk.CTkEntry(app, width= 250,placeholder_text='Digite o produto...')
-campo_produto.pack(pady=8)
+campo_produto = ctk.CTkEntry(box_frame_center, width= 250,placeholder_text='Digite o produto...')
+campo_produto.grid(row=1, column=0, pady=8, padx=10, sticky="n")
 
 # ========================================
 
 # Criando label Caso
-label_caso = ctk.CTkLabel(app, text='Número do Caso: ', font=("Arial", 13, "bold"))
-label_caso.pack(pady=8)
+label_caso = ctk.CTkLabel(box_frame_center, text='Número do Caso: ', font=("Arial", 13, "bold"))
+label_caso.grid(row=2, column=0, pady=8, padx=10)
 
 # Campo do Caso
-campo_caso = ctk.CTkEntry(app, width= 250,placeholder_text='Digite o número do Caso...')
-campo_caso.pack(pady=8)
+campo_caso = ctk.CTkEntry(box_frame_center, width= 250,placeholder_text='Digite o número do Caso...')
+campo_caso.grid(row=3, column=0, pady=8, padx=10)
 
 # ========================================
 
 # Criando label CPF
-label_cpf = ctk.CTkLabel(app, text='Número do CPF(apenas número): ', font=("Arial", 13, "bold"))
-label_cpf.pack(pady=8)
+label_cpf = ctk.CTkLabel(box_frame_center, text='Número do CPF(apenas número): ', font=("Arial", 13, "bold"))
+label_cpf.grid(row=4, column=0, pady=8, padx=10)
 
 # Campo do CPF
-campo_cpf = ctk.CTkEntry(app, width= 250,placeholder_text='Digite o número do CPF...')
-campo_cpf.pack(pady=8)
+campo_cpf = ctk.CTkEntry(box_frame_center, width= 250,placeholder_text='Digite o número do CPF...')
+campo_cpf.grid(row=5, column=0, pady=8, padx=10)
 
 # ========================================
 
 # Criando label Assunto principal
-label_assunto = ctk.CTkLabel(app, text='Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n\n[2] - Cancelamento de Seguro Prestamista\n\n[3] - Reembolso de desconto indevido de Saque\n\n[4] - Desacordo comercial', font=("Arial", 13, "bold"))
-label_assunto.pack(pady=8)
+label_assunto = ctk.CTkLabel(box_frame_center, text='Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n\n[2] - Cancelamento de Seguro Prestamista\n\n[3] - Reembolso de desconto indevido de Saque\n\n[4] - Desacordo comercial', font=("Arial", 13, "bold"))
+label_assunto.grid(row=6, column=0, pady=8, padx=10)
 
-campo_assunto = ctk.CTkEntry(app,width=250,placeholder_text='Digite o assunto...')
-campo_assunto.pack(pady=8)
+campo_assunto = ctk.CTkEntry(box_frame_center,width=250,placeholder_text='Digite o assunto...')
+campo_assunto.grid(row=7, column=0, pady=8, padx=10)
 
 # ========================================
 
 # Botão Submit
-submit = ctk.CTkButton(app, text='ENVIAR', command=load)
-submit.pack(pady=8)
+submit = ctk.CTkButton(box_frame_center, text='ENVIAR', command=load)
+submit.grid(row=8, column=0, pady=8, padx=10)
 
 # ========================================
 # Campo de barra de progresso
-progress_bar = ctk.CTkProgressBar(app, width=200, corner_radius=10, progress_color="green", border_width=10, fg_color="blue", height=10)
+progress_bar = ctk.CTkProgressBar(box_frame_center, width=200, corner_radius=10, progress_color="green", border_width=10, fg_color="blue", height=10)
 
 
 # ========================================
 
 # campo para controle de retorno e notificações
-invisible_element = ctk.CTkLabel(app, text='', font=("Arial", 15, "bold"))
-invisible_element.pack(pady=8)
+invisible_element = ctk.CTkLabel(box_frame_center, text='', font=("Arial", 15, "bold"))
+invisible_element.grid(row=9, column=0, pady=8, padx=10)
+
+
+
+# ============== BARRA LATERAL ESQUERDA  ==============
+
+# Container da barra lateral esquerda
+box_frame_left = ctk.CTkFrame(master=app, corner_radius=10)
+box_frame_left.grid(row=0, column=0, padx=10, pady=10)
+
+# container filho com ScrollBar para armazenar os casos
+box_list_case = ctk.CTkScrollableFrame(box_frame_left, width=180, height=150)
+box_list_case.grid(padx=10, pady=10)
+
+# armazenamento dos casos
+list_case = []
+
+# Titulo inicial
+
+label_title = ctk.CTkLabel(box_list_case, text='HISTÓRICO DE CASOS', font=fonte)
+label_title.grid(row=0, column=0, pady=8, padx=10, sticky="w")
+
+
+
+
+
+
 
 
 # Manter display aberto
