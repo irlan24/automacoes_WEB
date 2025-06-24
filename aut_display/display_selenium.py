@@ -218,26 +218,29 @@ def forms():
     submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
     navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
     # CLICA NO BOTÃO ENVIAR FORMS
-    # navegador.execute_script("arguments[0].click();", submit_button)
+    navegador.execute_script("arguments[0].click();", submit_button)
 
     # confirmação de envio de formulário no display
     try:
-        validator_element = WebDriverWait(navegador, 3).until(
+        # Tenta localizar elemento após enviar formulário
+        WebDriverWait(navegador, 3).until(
             EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
         )
-        progress_bar.stop()
-        progress_bar.grid_forget()        
+        progress_bar.stop() # para progresso da barra
+        progress_bar.grid_forget() # oculta a barra        
         texto_temporario("Formulário enviado com sucesso!", "green")
-        submit.configure(state='normal')
-        navegador.quit()
+        submit.configure(state='normal') # Habilita botão
+        # Armazena o caso na PILHA (Histórico de casos)
+        save_case(num_caso)
+        navegador.quit() # Fecha nevegador
         
     except: 
-        progress_bar.stop()
-        progress_bar.grid_forget()        
+        progress_bar.stop() # para progresso da barra
+        progress_bar.grid_forget() # oculta a barra        
         texto_temporario("Formulário não foi ENVIADO!", "red")
         # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
-        submit.configure(state='normal')
-        navegador.quit()
+        submit.configure(state='normal') # Habilita botão
+        navegador.quit()# Fecha nevegador
           
 
     
@@ -336,18 +339,23 @@ box_frame_left = ctk.CTkFrame(master=app, corner_radius=10)
 box_frame_left.grid(row=0, column=0, padx=10, pady=10)
 
 # container filho com ScrollBar para armazenar os casos
-box_list_case = ctk.CTkScrollableFrame(box_frame_left, width=180, height=150)
+box_list_case = ctk.CTkScrollableFrame(box_frame_left, width=180, height=10)
 box_list_case.grid(padx=10, pady=10)
 
 # armazenamento dos casos
 list_case = []
+def save_case(case):
+    list_case.insert(0, case)
+    label_list_case.configure(text="\n".join(list_case))
+    
 
 # Titulo inicial
-
 label_title = ctk.CTkLabel(box_list_case, text='HISTÓRICO DE CASOS', font=fonte)
 label_title.grid(row=0, column=0, pady=8, padx=10, sticky="w")
 
-
+# Label para mostrar os casos armazenados
+label_list_case = ctk.CTkLabel(box_list_case, text="", font=("Arial", 13, "bold"))
+label_list_case.grid(row=1, column=0, pady=10, sticky="w")
 
 
 
