@@ -6,7 +6,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from senhas import *
 from time import sleep
 import customtkinter as ctk
-import tkinter.font as tkFont
 import threading
 
 
@@ -203,45 +202,61 @@ def forms():
     navegador.execute_script("arguments[0].click();", of_open)
 
 
-    # Espera e marca o radio correspondente ao status final
-    for_close = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Finalizado"]')))
-    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", for_close)
-    navegador.execute_script("arguments[0].click();", for_close)
+    # ========================= TRANSFERIR OU FINALIZAR =================
 
-    # Espera e marca o radio correspondente a necessidade de atuação
-    precedence = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="SIM, demanda dentro do nosso escopo e necessitava de análise em Segundo Nível"]')))
-    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", precedence)
-    navegador.execute_script("arguments[0].click();", precedence)
+    if especial_radios.get() == "transferido":
 
-    # Espera e clica no botão enviar formulário
+        # Clica em transferir para outra fila
+        for_transfer = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Transferido para outro Grupo"]')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", for_transfer)
+        navegador.execute_script("arguments[0].click();", for_transfer)
 
-    submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
-    navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
-    # CLICA NO BOTÃO ENVIAR FORMS
-    navegador.execute_script("arguments[0].click();", submit_button)
+        # Seleciona as opções de transferência
+        select_transfer = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="r99032d47f80f473e9a3974edb4dea644_placeholder_content"]')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", select_transfer)
+        navegador.execute_script("arguments[0].click();", select_transfer)
 
-    # confirmação de envio de formulário no display
-    try:
-        # Tenta localizar elemento após enviar formulário
-        WebDriverWait(navegador, 3).until(
-            EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
-        )
-        progress_bar.stop() # para progresso da barra
-        progress_bar.grid_forget() # oculta a barra        
-        texto_temporario("Formulário enviado com sucesso!", "green")
-        submit.configure(state='normal') # Habilita botão
-        # Armazena o caso na PILHA (Histórico de casos)
-        save_case(num_caso)
-        navegador.quit() # Fecha nevegador
-        
-    except: 
-        progress_bar.stop() # para progresso da barra
-        progress_bar.grid_forget() # oculta a barra        
-        texto_temporario("Formulário não foi ENVIADO!", "red")
-        # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
-        submit.configure(state='normal') # Habilita botão
-        navegador.quit()# Fecha nevegador
-          
+    else:
+
+        # Espera e marca o radio correspondente ao status final
+        for_close = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Finalizado"]')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", for_close)
+        navegador.execute_script("arguments[0].click();", for_close)
+
+        # Espera e marca o radio correspondente a necessidade de atuação
+        precedence = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="SIM, demanda dentro do nosso escopo e necessitava de análise em Segundo Nível"]')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", precedence)
+        navegador.execute_script("arguments[0].click();", precedence)
+
+        # Espera e clica no botão enviar formulário
+
+        submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+        # CLICA NO BOTÃO ENVIAR FORMS
+        navegador.execute_script("arguments[0].click();", submit_button)
+
+        # confirmação de envio de formulário no display
+        try:
+            # Tenta localizar elemento após enviar formulário
+            WebDriverWait(navegador, 3).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
+            )
+            progress_bar.stop() # para progresso da barra
+            progress_bar.grid_forget() # oculta a barra        
+            texto_temporario("Formulário enviado com sucesso!", "green")
+            submit.configure(state='normal') # Habilita botão
+            # Armazena o caso na PILHA (Histórico de casos)
+            save_case(num_caso)
+            navegador.quit() # Fecha nevegador
+            
+        except: 
+            progress_bar.stop() # para progresso da barra
+            progress_bar.grid_forget() # oculta a barra        
+            texto_temporario("Formulário não foi ENVIADO!", "red")
+            # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+            submit.configure(state='normal') # Habilita botão
+            navegador.quit()# Fecha nevegador
+            
 
     
 
@@ -251,6 +266,8 @@ def forms():
 
 # aparencia
 ctk.set_appearance_mode('dark')
+# Tema
+ctk.set_default_color_theme("blue")
 
 # criando o display
 app = ctk.CTk()
@@ -259,7 +276,7 @@ app = ctk.CTk()
 app.title('Forms')
 
 # Definição da largura x altura do display
-app.geometry("650x650")
+app.geometry("900x650")
 
 # Criando uma fonte para títulos
 fonte = ctk.CTkFont(family="Arial", size=15, weight="bold", slant="italic", underline=True)
@@ -358,7 +375,38 @@ label_list_case = ctk.CTkLabel(box_list_case, text="", font=("Arial", 13, "bold"
 label_list_case.grid(row=1, column=0, pady=10, sticky="w")
 
 
+# ============== BARRA LATERAL DIREITA  ==============
 
+# Container da barra lateral direita
+box_frame_right = ctk.CTkFrame(app, corner_radius=10)
+box_frame_right.grid(row=0, column=3, padx=10, pady=10, sticky="n")
+
+box_frame_right.grid_columnconfigure(0, weight=1 )
+box_frame_right.grid_rowconfigure(0, weight=1)
+   
+
+# Titulo inicial
+label_title_right = ctk.CTkLabel(box_frame_right, text='CONFIGURAÇÕES ESPECIAIS', font=fonte)
+label_title_right.grid(row=0, column=0, pady=8, padx=30, sticky="nsew")
+
+box_frame = ctk.CTkFrame(box_frame_right, corner_radius=10)
+box_frame.grid(row=1, column=0)
+
+
+def mostrar_opcao():
+    print(especial_radios.get())
+
+
+
+
+especial_radios = ctk.StringVar(value= "finalizado")
+
+# Radios para transferência de filas
+especial_status = ctk.CTkRadioButton(box_frame, text="Finalizado", variable= especial_radios, value= "finalizado", font=("Arial", 10, "bold"), command=mostrar_opcao)
+especial_status.grid(row=0, column=0, pady=10, padx=10, sticky="nsew" )
+
+especial_transfer = ctk.CTkRadioButton(box_frame, text="Trasferido", variable= especial_radios, value= "transferido", font=("Arial", 10, "bold"), command=mostrar_opcao)
+especial_transfer.grid(row=0, column=1, pady=10, padx=10, sticky="nsew")
 
 
 
