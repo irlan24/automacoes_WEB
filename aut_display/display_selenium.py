@@ -104,9 +104,9 @@ def forms():
 
     
     options = Options()
-    options.add_argument("--headless")  # Ativa o modo headless
-    options.add_argument("--disable-gpu")  # Recomendado para Windows
-    options.add_argument("--window-size=1920,1080")  # Tamanho fixo da janela (evita erros de renderização)
+    # options.add_argument("--headless")  # Ativa o modo headless
+    # options.add_argument("--disable-gpu")  # Recomendado para Windows
+    # options.add_argument("--window-size=1920,1080")  # Tamanho fixo da janela (evita erros de renderização)
 
     # inicia o navegador
     navegador = webdriver.Chrome(options=options)
@@ -212,9 +212,49 @@ def forms():
         navegador.execute_script("arguments[0].click();", for_transfer)
 
         # Seleciona as opções de transferência
-        select_transfer = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="r99032d47f80f473e9a3974edb4dea644_placeholder_content"]')))
-        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", select_transfer)
-        navegador.execute_script("arguments[0].click();", select_transfer)
+        option_filas = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="r99032d47f80f473e9a3974edb4dea644_placeholder_content"]')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", option_filas)
+        navegador.execute_script("arguments[0].click();", option_filas)
+
+        # Escolhe a fila
+        select_filas = navegador.find_element(By.CSS_SELECTOR, filas.get())
+        navegador.execute_script("arguments[0].click();", select_filas)
+
+        # Espera e marca o radio correspondente a necessidade de atuação
+        precedence = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="SIM, demanda dentro do nosso escopo e necessitava de análise em Segundo Nível"]')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", precedence)
+        navegador.execute_script("arguments[0].click();", precedence)
+
+        # Espera e clica no botão enviar formulário
+        sleep(15)
+
+        submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
+        navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+        # CLICA NO BOTÃO ENVIAR FORMS
+        navegador.execute_script("arguments[0].click();", submit_button)
+
+        # confirmação de envio de formulário no display
+        try:
+            # Tenta localizar elemento após enviar formulário
+            WebDriverWait(navegador, 3).until(
+                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
+            )
+            progress_bar.stop() # para progresso da barra
+            progress_bar.grid_forget() # oculta a barra        
+            texto_temporario("Formulário enviado com sucesso!", "green")
+            submit.configure(state='normal') # Habilita botão
+            # Armazena o caso na PILHA (Histórico de casos)
+            save_case(num_caso)
+            navegador.quit() # Fecha nevegador
+            
+        except: 
+            progress_bar.stop() # para progresso da barra
+            progress_bar.grid_forget() # oculta a barra        
+            texto_temporario("Formulário não foi ENVIADO!", "red")
+            # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+            submit.configure(state='normal') # Habilita botão
+            navegador.quit()# Fecha nevegador
+
 
     else:
 
@@ -381,32 +421,69 @@ label_list_case.grid(row=1, column=0, pady=10, sticky="w")
 box_frame_right = ctk.CTkFrame(app, corner_radius=10)
 box_frame_right.grid(row=0, column=3, padx=10, pady=10, sticky="n")
 
+# Auto expansão de linhas e colunas, responsividade
 box_frame_right.grid_columnconfigure(0, weight=1 )
-box_frame_right.grid_rowconfigure(0, weight=1)
-   
+box_frame_right.grid_rowconfigure(0, weight=1)   
 
 # Titulo inicial
 label_title_right = ctk.CTkLabel(box_frame_right, text='CONFIGURAÇÕES ESPECIAIS', font=fonte)
 label_title_right.grid(row=0, column=0, pady=8, padx=30, sticky="nsew")
 
+# Container de primeiro grupo de radio
 box_frame = ctk.CTkFrame(box_frame_right, corner_radius=10)
 box_frame.grid(row=1, column=0)
 
 
-def mostrar_opcao():
-    print(especial_radios.get())
+def transferidos():
+    box_frame_1.grid(row=2, column=0, pady=30, sticky="nsew")
+    fila_seguro.grid(row=0, column=0, pady=10, padx=10, sticky="w" )
+    fila_unico.grid(row=1, column=0, pady=10, padx=10, sticky="w" )
+    fila_financeiro.grid(row=2, column=0, pady=10, padx=10, sticky="w" )
+    
+
+def finalizados():
+    box_frame_1.grid_forget()
+    fila_seguro.grid_forget()
+    fila_unico.grid_forget()
+    fila_financeiro.grid_forget()
+    
 
 
 
-
+# Armazena o valor do primeiro grupo de radio
 especial_radios = ctk.StringVar(value= "finalizado")
 
-# Radios para transferência de filas
-especial_status = ctk.CTkRadioButton(box_frame, text="Finalizado", variable= especial_radios, value= "finalizado", font=("Arial", 10, "bold"), command=mostrar_opcao)
+# Radios para transferência de filas (Padrão finalizado)
+especial_status = ctk.CTkRadioButton(box_frame, text="Finalizado", variable= especial_radios, value= "finalizado", font=("Arial", 10, "bold"), command=finalizados)
 especial_status.grid(row=0, column=0, pady=10, padx=10, sticky="nsew" )
 
-especial_transfer = ctk.CTkRadioButton(box_frame, text="Trasferido", variable= especial_radios, value= "transferido", font=("Arial", 10, "bold"), command=mostrar_opcao)
+# Radios para transferência de filas (casos transferidos)
+especial_transfer = ctk.CTkRadioButton(box_frame, text="Trasferido", variable= especial_radios, value= "transferido", font=("Arial", 10, "bold"), command=transferidos)
 especial_transfer.grid(row=0, column=1, pady=10, padx=10, sticky="nsew")
+
+# ==========
+
+# Container de segundo grupo de radio
+box_frame_1 = ctk.CTkFrame(box_frame_right, corner_radius=10)
+
+
+
+# # Armazena o valor do segundo grupo de radio
+filas = ctk.StringVar(value='')
+
+# Radios para escolha de filas (seguro)
+fila_seguro = ctk.CTkRadioButton(box_frame_1, text="Backoffice Seguros", variable= filas, value='span[aria-label="Backoffice Seguros"]', font=("Arial", 10, "bold"))
+
+
+# Radios para escolha de filas (Único)
+fila_unico = ctk.CTkRadioButton(box_frame_1, text="Backoffice Único", variable= filas, value='span[aria-label="Backoffice Único"]', font=("Arial", 10, "bold"))
+
+
+# Radios para escolha de filas (financeiro)
+fila_financeiro = ctk.CTkRadioButton(box_frame_1, text="Backoffice Controle Financeiro", variable= filas, value='span[aria-label="Backoffice Controle Financeiro"]', font=("Arial", 10, "bold"))
+
+
+
 
 
 
