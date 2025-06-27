@@ -202,7 +202,7 @@ def forms():
     navegador.execute_script("arguments[0].click();", of_open)
 
 
-    # ========================= TRANSFERIR OU FINALIZAR =================
+    # ========================= TRANSFERIR FILA & FINALIZAR =================
 
     if especial_radios.get() == "transferido":
 
@@ -211,7 +211,7 @@ def forms():
         navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", for_transfer)
         navegador.execute_script("arguments[0].click();", for_transfer)
 
-        # Seleciona as opções de transferência
+        # Abre as opções de transferência
         option_filas = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="r99032d47f80f473e9a3974edb4dea644_placeholder_content"]')))
         navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", option_filas)
         navegador.execute_script("arguments[0].click();", option_filas)
@@ -220,16 +220,60 @@ def forms():
         select_filas = navegador.find_element(By.CSS_SELECTOR, filas.get())
         navegador.execute_script("arguments[0].click();", select_filas)
 
+        if filas.get() == 'span[aria-label="CAC"]': # Somente se a fila CAC for selecionada
+            
+            # clica na opção de "demanda procedente, mas poderia ser resolvido no 1° nível"
+            no_precedence = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value^="SIM, demanda dentro do nosso escopo, mas"]')))
+            navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", no_precedence)
+            navegador.execute_script("arguments[0].click();", no_precedence)
+
+            # # opções disponíveis para resolução em 1° nível
+            first_level_resolution = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, option_resolution.get())))
+            navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", first_level_resolution)
+            navegador.execute_script("arguments[0].click();", first_level_resolution)
+
+            # Espera e clica no botão enviar formulário
+            submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
+            navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)            
+
+            # CLICA NO BOTÃO ENVIAR FORMS
+            navegador.execute_script("arguments[0].click();", submit_button)
+
+            # confirmação de envio de formulário no display
+            try:
+                # Tenta localizar elemento após enviar formulário
+                WebDriverWait(navegador, 3).until(
+                    EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'BackOffice Atendimento agradece!')]"))
+                )
+                progress_bar.stop() # para progresso da barra
+                progress_bar.grid_forget() # oculta a barra        
+                texto_temporario("Formulário enviado com sucesso!", "green")
+                submit.configure(state='normal') # Habilita botão
+                # Armazena o caso na PILHA (Histórico de casos)
+                save_case(num_caso)
+                navegador.quit() # Fecha nevegador
+                
+            except: 
+                progress_bar.stop() # para progresso da barra
+                progress_bar.grid_forget() # oculta a barra        
+                texto_temporario("Formulário não foi ENVIADO!", "red")
+                # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+                submit.configure(state='normal') # Habilita botão
+                navegador.quit()# Fecha nevegador
+        
+
+
+
+
         # Espera e marca o radio correspondente a necessidade de atuação
         precedence = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="SIM, demanda dentro do nosso escopo e necessitava de análise em Segundo Nível"]')))
         navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", precedence)
         navegador.execute_script("arguments[0].click();", precedence)
 
         # Espera e clica no botão enviar formulário
-        sleep(15)
-
         submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
         navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+        
         # CLICA NO BOTÃO ENVIAR FORMS
         navegador.execute_script("arguments[0].click();", submit_button)
 
@@ -272,6 +316,7 @@ def forms():
 
         submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
         navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
+        
         # CLICA NO BOTÃO ENVIAR FORMS
         navegador.execute_script("arguments[0].click();", submit_button)
 
@@ -439,14 +484,26 @@ def transferidos():
     fila_seguro.grid(row=0, column=0, pady=10, padx=10, sticky="w" )
     fila_unico.grid(row=1, column=0, pady=10, padx=10, sticky="w" )
     fila_financeiro.grid(row=2, column=0, pady=10, padx=10, sticky="w" )
+    fila_cac.grid(row=3, column=0, pady=10, padx=10, sticky="w" )
     
 
 def finalizados():
     box_frame_1.grid_forget()
-    fila_seguro.grid_forget()
-    fila_unico.grid_forget()
-    fila_financeiro.grid_forget()
+    box_frame_2.grid_forget()
+
+
+def cac():
+         
+        if filas.get() == 'span[aria-label="CAC"]':
+            box_frame_2.grid(row=3, column=0, pady=20, sticky="nsew")
+
+
+def outras_filas():
     
+    if filas.get() != 'span[aria-label="CAC"]':
+
+        box_frame_2.grid_forget()
+
 
 
 
@@ -472,16 +529,39 @@ box_frame_1 = ctk.CTkFrame(box_frame_right, corner_radius=10)
 filas = ctk.StringVar(value='')
 
 # Radios para escolha de filas (seguro)
-fila_seguro = ctk.CTkRadioButton(box_frame_1, text="Backoffice Seguros", variable= filas, value='span[aria-label="Backoffice Seguros"]', font=("Arial", 10, "bold"))
+fila_seguro = ctk.CTkRadioButton(box_frame_1, text="Backoffice Seguros", variable= filas, value='span[aria-label="Backoffice Seguros"]', font=("Arial", 10, "bold"), command=outras_filas)
 
 
 # Radios para escolha de filas (Único)
-fila_unico = ctk.CTkRadioButton(box_frame_1, text="Backoffice Único", variable= filas, value='span[aria-label="Backoffice Único"]', font=("Arial", 10, "bold"))
+fila_unico = ctk.CTkRadioButton(box_frame_1, text="Backoffice Único", variable= filas, value='span[aria-label="Backoffice Único"]', font=("Arial", 10, "bold"), command=outras_filas)
 
 
 # Radios para escolha de filas (financeiro)
-fila_financeiro = ctk.CTkRadioButton(box_frame_1, text="Backoffice Controle Financeiro", variable= filas, value='span[aria-label="Backoffice Controle Financeiro"]', font=("Arial", 10, "bold"))
+fila_financeiro = ctk.CTkRadioButton(box_frame_1, text="Backoffice Controle Financeiro", variable= filas, value='span[aria-label="Backoffice Controle Financeiro"]', font=("Arial", 10, "bold"), command=outras_filas)
 
+
+# Radios para escolha de filas (CAC)
+fila_cac = ctk.CTkRadioButton(box_frame_1, text="CAC", variable= filas, value='span[aria-label="CAC"]', font=("Arial", 10, "bold"), command=cac)
+
+# ================
+
+option_resolution = ctk.StringVar(value='')
+
+# Container de terceiro grupo de radio
+box_frame_2 = ctk.CTkFrame(box_frame_right, corner_radius=10)
+
+# Marca o radio Reembolso sem saldo credor
+reembolso_sem_credor = ctk.CTkRadioButton(box_frame_2, text="Reembolso sem saldo credor", variable= option_resolution, value='input[value="Pedido de reembolso de Seguro ou Cartão em que não há saldo credor a reembolsar na fatura"]', font=("Arial", 10, "bold"))
+reembolso_sem_credor.grid(row=0, column=0, pady=10, padx=10, sticky="w")
+
+not_v3 = ctk.CTkRadioButton(box_frame_2, text="Sem cancelar no V3", variable= option_resolution, value='input[value="Pedido de cancelamento/reembolso da Proteção Premiada sem o devido comando de cancelamento no Plataforma"]', font=("Arial", 10, "bold"))
+not_v3.grid(row=1, column=0, pady=10, padx=10, sticky="w")
+
+in_10_day = ctk.CTkRadioButton(box_frame_2, text="Dentro dos 10 dias", variable= option_resolution, value='input[value="Pedido de reembolso de Saque dentro do prazo de 10 dias corridos para reembolso em lote"]', font=("Arial", 10, "bold"))
+in_10_day.grid(row=2, column=0, pady=10, padx=10, sticky="w")
+
+duplicidade = ctk.CTkRadioButton(box_frame_2, text="Duplicidade nos casos", variable= option_resolution, value='input[value="Caso aberto em duplicidade quando o caso original ainda está dentro do prazo"]', font=("Arial", 10, "bold"))
+duplicidade.grid(row=3, column=0, pady=10, padx=10, sticky="w")
 
 
 
