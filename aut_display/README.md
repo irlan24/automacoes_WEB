@@ -34,7 +34,7 @@ Instale my-project com terminal/VScode
 
 ![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/forms_enviado.png)
 
-![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_nova_coluna.png)
+![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_segunda_coluna_0.png)
 
 ![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_terceira_coluna_0.png)
 
