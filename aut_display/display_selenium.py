@@ -4,9 +4,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from senhas import *
+from email_analista import *
 from time import sleep
 import customtkinter as ctk
 import threading
+
 
 
 def load():
@@ -35,7 +37,80 @@ def forms():
     num_cpf = campo_cpf.get()
     produto = campo_produto.get()
     assunto = campo_assunto.get()
+    email_analista = campo_email.get()
     
+
+    # Todas as opções de email conforme o analista
+    match email_analista:
+        # Andiara Nunes = andiara.silva@credcesta.com.br
+        case "andiara.silva@credcesta.com.br":
+            analista_email = "Andiara Nunes"
+
+        # Aracilma Portugal = aracilma.portugal@credcesta.com.br
+        case "aracilma.portugal@credcesta.com.br":
+            analista_email = "Aracilma Portugal"
+
+        # Angelina Neta = angelina.neta@credcesta.com.br
+        case "angelina.neta@credcesta.com.br":
+            analista_email = "Angelina Neta"  
+
+        # Ana Silva = ana.silva@credcesta.com.br
+        case "ana.silva@credcesta.com.br":
+            analista_email = "Ana Silva"
+
+        # Beatriz Zacarias = beatriz.jesus@credcesta.com.br
+        case "beatriz.jesus@credcesta.com.br":
+            analista_email = "Beatriz Zacarias"
+
+        # Ingrid Brito = ingrid.brito@credcesta.com.br
+        case "ingrid.brito@credcesta.com.br":
+            analista_email = "Ingrid Brito"
+
+        # Irlan Silva = irlan.silva@credcesta.com.br
+        case "irlan.silva@credcesta.com.br":
+            analista_email = "Irlan Silva" 
+
+        # Jeferson Santos = jeferson.santos@credcesta.com.br
+        case "jeferson.santos@credcesta.com.br":
+            analista_email = "Jeferson Santos"
+
+        # Larissa Lima = larissa.lima@credcesta.com.br
+        case "larissa.lima@credcesta.com.br":
+            analista_email = "Larissa Lima"
+
+        # Lucas Alves = lucas.santos@credcesta.com.br
+        case "lucas.santos@credcesta.com.br":
+            analista_email = "Lucas Alves"
+
+        # Lucas Bispo = lucas.bsantos@credcesta.com.br
+        case "lucas.bsantos@credcesta.com.br":
+            analista_email = "Lucas Bispo"  
+
+        # Maria Inês = maria.santos@credcesta.com.br
+        case "maria.santos@credcesta.com.br":
+            analista_email = "Maria Inês"                                        
+
+        # Rita de Cassia = rita.santos@credcesta.com.br
+        case "rita.santos@credcesta.com.br":
+            analista_email = "Rita de Cassia"
+
+        # Sheila Paranagua = sheila.paranagua@credcesta.com.br
+        case "sheila.paranagua@credcesta.com.br":
+            analista_email = "Sheila Paranagua" 
+
+        # Sueli Santos = sueli.alves@credcesta.com.br
+        case "sueli.alves@credcesta.com.br":
+            analista_email = "Sueli Santos"    
+
+        # Vivian Cunha = vivian.cunha@credcesta.com.br
+        case "vivian.cunha@credcesta.com.br":
+            analista_email = "Vivian Cunha" 
+
+
+
+
+
+
     # Condições e opções para os Produtos
     if produto == '':
         invisible_element.configure(text="Campo Produto está em branco!\nDigite novamente!", text_color="red")
@@ -67,7 +142,7 @@ def forms():
 
     # Condições e opções para os Assuntos
     
-
+    
     if assunto == '':
         invisible_element.configure(text="Campo Assunto está em branco!\nDigite novamente!", text_color="red")
         progress_bar.stop()
@@ -104,9 +179,9 @@ def forms():
 
     
     options = Options()
-    # options.add_argument("--headless")  # Ativa o modo headless
-    # options.add_argument("--disable-gpu")  # Recomendado para Windows
-    # options.add_argument("--window-size=1920,1080")  # Tamanho fixo da janela (evita erros de renderização)
+    options.add_argument("--headless")  # Ativa o modo headless
+    options.add_argument("--disable-gpu")  # Recomendado para Windows
+    options.add_argument("--window-size=1920,1080")  # Tamanho fixo da janela (evita erros de renderização)
 
     # inicia o navegador
     navegador = webdriver.Chrome(options=options)
@@ -119,27 +194,89 @@ def forms():
     navegador.maximize_window()
 
     # ================ login ==========
-    # Espera o campo usuario aparecer e digita nele
-    usuario = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="email"]')))
-    usuario.send_keys(login)
+    # email_salvo = campo_email.get() # salva o email digitado a uma variavel
+    # senha_salvo = campo_senha.get() # salva a senha digitada a uma variavel
+    # indicie_arroba = email_salvo.find("@")
+    # novo_texto = email_salvo[0:indicie_arroba]
+    # analista_email = novo_texto.replace(".", " ").title()
 
-    # clica no botão avançar
-    sleep(0.5)
-    navegador.find_element("css selector", 'input[type="submit"]').click()
+    
 
-    # Espera o campo senha aparecer e digita nele
-    password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
-    password.send_keys(senha)
+    # if len(list_case) == 0:
+       
+    try:
+        # Espera o campo usuario aparecer e digita nele
+        usuario = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="email"]')))
+        usuario.send_keys(campo_email.get())
 
-    sleep(0.5)
-    # clica no botão Submit
-    navegador.find_element("css selector", 'input[type="submit"]').click()
+        # clica no botão avançar
+        sleep(0.5)
+        navegador.find_element("css selector", 'input[type="submit"]').click()
 
-    # Espera o botao "iniciar agora" aparecer e clica nele 
-    iniciar_agora = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div')))
-    iniciar_agora.click()
+        # utiliza um elemento da tela seguinte como validador do email
+        WebDriverWait(navegador, 3).until(EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Insira a senha')]")))
+    except:
+        label_invisible_login.configure(text="Email inválido!", text_color="red")
+        progress_bar.grid_forget() # oculta a barra
+        invisible_element.configure(text='')  
+        submit.configure(state='normal') # Habilita botão
+        navegador.quit()# Fecha nevegador
+
+    try:
+        # Espera o campo senha aparecer e digita nele
+        password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
+        password.send_keys(campo_senha.get())
+
+        sleep(0.5)
+        # clica no botão Submit
+        navegador.find_element("css selector", 'input[type="submit"]').click()
+
+        # utiliza um elemento da tela seguinte como validador da senha 
+        WebDriverWait(navegador, 3).until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div')))
+        
+        # Apresentação do nome do analista após validar no login
+        label_invisible_login.configure(text=f'Logado como {analista_email}', text_color='green')
+        box_login.grid_forget()
+    except:
+        label_invisible_login.configure(text="Senha inválida!", text_color="red")
+        progress_bar.grid_forget() # oculta a barra 
+        invisible_element.configure(text='')  
+        submit.configure(state='normal') # Habilita botão
+        navegador.quit()# Fecha nevegador
+
+    
+    
+    iniciar_agora = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div')))  
+    iniciar_agora.click()  
+        
+
+    # else:
+        
+    #     # Espera o campo usuario aparecer e digita nele
+    #     usuario = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="email"]')))
+    #     usuario.send_keys(email_salvo)
+
+    #     # clica no botão avançar
+    #     sleep(0.5)
+    #     navegador.find_element("css selector", 'input[type="submit"]').click()
+        
+    #     # Espera o campo senha aparecer e digita nele
+    #     password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
+    #     password.send_keys(senha_salvo)
+
+    #     sleep(0.5)
+    #     # clica no botão Submit
+    #     navegador.find_element("css selector", 'input[type="submit"]').click()
+        
+    #     iniciar_agora = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div')))  
+    #     iniciar_agora.click() 
+
+    
 
     # ===================== FORMS ==============
+
+    
+    
 
     # Espera e marca o radio correspondente a equipe    
     equipe = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[type="radio"][value="Eduardo"]')))
@@ -149,10 +286,10 @@ def forms():
 
 
     # Espera e marca o radio correspondente ao analista
-    analista = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Irlan Silva"]')))
+    analista = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,f'input[value="{analista_email}"]')))
     navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", analista)
     navegador.execute_script("arguments[0].click();", analista)
-
+    
 
     # Espera e marca o radio correspondente ao Produto
     select_produt = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,produto)))
@@ -352,7 +489,7 @@ def forms():
 # aparencia
 ctk.set_appearance_mode('dark')
 # Tema
-ctk.set_default_color_theme("blue")
+ctk.set_default_color_theme("green")
 
 # criando o display
 app = ctk.CTk()
@@ -438,7 +575,7 @@ invisible_element.grid(row=9, column=0, pady=8, padx=10)
 
 # Container da barra lateral esquerda
 box_frame_left = ctk.CTkFrame(master=app, corner_radius=10)
-box_frame_left.grid(row=0, column=0, padx=10, pady=10)
+box_frame_left.grid(row=0, column=0, padx=10, pady=10, sticky='n')
 
 # container filho com ScrollBar para armazenar os casos
 box_list_case = ctk.CTkScrollableFrame(box_frame_left, width=180, height=10)
@@ -458,6 +595,51 @@ label_title.grid(row=0, column=0, pady=8, padx=10, sticky="w")
 # Label para mostrar os casos armazenados
 label_list_case = ctk.CTkLabel(box_list_case, text="", font=("Arial", 13, "bold"))
 label_list_case.grid(row=1, column=0, pady=10, sticky="w")
+
+# =======
+
+# Segundo container da barra lateral esquerda para o login
+box_frame_login = ctk.CTkFrame(box_frame_left, corner_radius=10)
+box_frame_login.grid(row=1, column=0, padx=10, pady=10, sticky='s')
+
+# Titulo inicial
+label_title_login = ctk.CTkLabel(box_frame_login, text='ACESSO DO ANALISTA', font=fonte)
+label_title_login.grid(row=0, column=0, pady=8, padx=10, sticky="n")
+
+# Container filho para login
+box_login = ctk.CTkFrame(box_frame_login, corner_radius=10)
+box_login.grid(row=1, column=0, padx=10, pady=10, sticky='w')
+
+# label do email de usuário
+label_email = ctk.CTkLabel(box_login, text="Email: ", font=("Arial", 11, "bold"), height=10, fg_color="transparent", bg_color="transparent")
+label_email.grid(row=0, column=0, pady=8, padx=5, sticky="w")
+
+# Campo do email de usuário
+campo_email = ctk.CTkEntry(box_login, placeholder_text='Digite seu email...')
+campo_email.grid(row=0, column=1, pady=8, padx=5, sticky="w")
+
+# label da senha de usuário
+label_senha = ctk.CTkLabel(box_login, text="Senha: ", font=("Arial", 11, "bold"), height=10, fg_color="transparent", bg_color="transparent")
+label_senha.grid(row=1, column=0, pady=8, padx=5, sticky="w")
+
+# Campo da senha de usuário
+campo_senha = ctk.CTkEntry(box_login, placeholder_text='Digite sua senha...', show="*")
+campo_senha.grid(row=1, column=1, pady=8, padx=5, sticky="w")
+
+# # botão para logar-se
+# botao_login = ctk.CTkButton(box_frame_login, text="LOGIN")
+# botao_login.grid(row=2, column=0, pady=10, sticky="s")
+
+# label para notificação de login
+label_invisible_login = ctk.CTkLabel(box_frame_login, text='', font=("Arial", 15, "bold"))
+label_invisible_login.grid(row=2, column=0, pady=8, padx=5, sticky="w")
+
+
+
+
+
+
+
 
 
 # ============== BARRA LATERAL DIREITA  ==============

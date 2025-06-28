@@ -2,4 +2,5 @@ senhas.py
 __pycache__
 dist
 display_playwright.py
+email_analista.py
 
