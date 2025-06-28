@@ -42,6 +42,14 @@ Instale my-project com terminal/VScode
 
 ![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_terceira_coluna_2.png)
 
+![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_segunda_coluna_1.png)
+
+![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_segunda_coluna_2.png)
+
+![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_segunda_coluna_3.png)
+
+![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/aut_display/funcionamento_img/att_segunda_coluna_4.png)
+
 
 ## 🔗 Links
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://github.com/irlan24?tab=repositories)
