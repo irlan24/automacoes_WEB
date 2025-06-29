@@ -13,7 +13,8 @@ Também possui como objetivo masterizar os conhecimentos recem adquiridos no ram
 
 ## O que é necessário utilizar para rodar o projeto?
 
-1 - Necessário ter o python instalado, recomendo a versão mais recente (V 3.13.15 / download: https://www.python.org/downloads/);
+1 - Necessário ter o python instalado, recomendo a versão mais recente (V 3.13.15 / download: https://www.python.org/downloads/)
+
 2 - necessário importações de:
 ```bash
   from selenium import webdriver # Webdrive selenium
@@ -26,9 +27,13 @@ Também possui como objetivo masterizar os conhecimentos recem adquiridos no ram
   import customtkinter as ctk # Desenvolvimento da interface gráfica (necessário instalação)
   import threading # Usado para execução de multiplas telas em simultâneo 
 ```
+
 3 - Toda automação foi desenvolvida com a biblioteca Selenium (documentação: https://www.selenium.dev/pt-br/documentation/)
+
 4 - A interface gráfica foi desenvolvida com o customtkinter (necessário instalação prévia)
+
 5 - Para converter em executável, recomendo o pyinstaller ou o cx_freeze (alguns casos, pyinstaller pode ser identificado como vírus pelo antivírus instalado, mas não é prejudicial ao sistema)
+
 
 ## Instalação
 
