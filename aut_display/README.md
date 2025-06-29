@@ -5,8 +5,6 @@
 
 Foi desenvolvido uma interface gráfica para preenchimento de um formulário, que contabiliza a produtividade (resolução no dia) da empresa na qual eu trabalho atualmente.
 
-Com o objetivo compartilhar para os que não são dev, foi inserido uma interface gráfica com a biblioteca CustomTKinter e criado um arquivo .exe com o pyinstaller e cx_freeze (pyinstaller foi marcado como vírus na empresa kkk).
-
 ## Qual o objetivo?
 
 Esse projeto tem por finalidade reduzir o tempo gasto em que levaria para o preenchimento manual do fomulário, mantendo o preenchimento padrão e alterando, de forma mais ágil, apenas as informações variáveis.
