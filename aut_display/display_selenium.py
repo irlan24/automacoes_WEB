@@ -4,8 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from senhas import *
-from email_analista import *
 from time import sleep
+from function import *
 import customtkinter as ctk
 import threading
 
@@ -341,7 +341,7 @@ def forms():
 
     # ========================= TRANSFERIR FILA & FINALIZAR =================
 
-    if especial_radios.get() == "transferido":
+    if especial_radios.get() == "transferido": # Apenas se a opção "transferido" for marcada
 
         # Clica em transferir para outra fila
         for_transfer = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Transferido para outro Grupo"]')))
@@ -477,6 +477,7 @@ def forms():
             texto_temporario("Formulário não foi ENVIADO!", "red")
             # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
             submit.configure(state='normal') # Habilita botão
+            save_case(num_caso)
             navegador.quit()# Fecha nevegador
             
 
@@ -581,20 +582,20 @@ box_frame_left.grid(row=0, column=0, padx=10, pady=10, sticky='n')
 box_list_case = ctk.CTkScrollableFrame(box_frame_left, width=180, height=10)
 box_list_case.grid(padx=10, pady=10)
 
-# armazenamento dos casos
-list_case = []
+# Função para armazenamento dos casos
 def save_case(case):
-    list_case.insert(0, case)
-    label_list_case.configure(text="\n".join(list_case))
+    entry_list_case.configure(state="normal") # torna o campo editável temporárimente
+    entry_list_case.insert("1.0", case + "\n") # insere ao inicio o conteúdo (n° do caso)   
+    app.after(0, lambda: entry_list_case.configure(state="disabled")) # Volta o campo para apenas visualização
     
 
 # Titulo inicial
 label_title = ctk.CTkLabel(box_list_case, text='HISTÓRICO DE CASOS', font=fonte)
 label_title.grid(row=0, column=0, pady=8, padx=10, sticky="w")
 
-# Label para mostrar os casos armazenados
-label_list_case = ctk.CTkLabel(box_list_case, text="", font=("Arial", 13, "bold"))
-label_list_case.grid(row=1, column=0, pady=10, sticky="w")
+# Armazena os dados do "Histórico de casos" e copiar o conteudo
+entry_list_case = ctk.CTkTextbox(box_list_case, font=("Arial", 13, "bold"), state="disabled")
+entry_list_case.grid(row=1, column=0, pady=10, sticky="w")
 
 # =======
 
@@ -606,7 +607,7 @@ box_frame_login.grid(row=1, column=0, padx=10, pady=10, sticky='s')
 label_title_login = ctk.CTkLabel(box_frame_login, text='ACESSO DO ANALISTA', font=fonte)
 label_title_login.grid(row=0, column=0, pady=8, padx=10, sticky="n")
 
-# Container filho para login
+# Container filho para login e conteúdo
 box_login = ctk.CTkFrame(box_frame_login, corner_radius=10)
 box_login.grid(row=1, column=0, padx=10, pady=10, sticky='w')
 
@@ -625,10 +626,6 @@ label_senha.grid(row=1, column=0, pady=8, padx=5, sticky="w")
 # Campo da senha de usuário
 campo_senha = ctk.CTkEntry(box_login, placeholder_text='Digite sua senha...', show="*")
 campo_senha.grid(row=1, column=1, pady=8, padx=5, sticky="w")
-
-# # botão para logar-se
-# botao_login = ctk.CTkButton(box_frame_login, text="LOGIN")
-# botao_login.grid(row=2, column=0, pady=10, sticky="s")
 
 # label para notificação de login
 label_invisible_login = ctk.CTkLabel(box_frame_login, text='', font=("Arial", 15, "bold"))

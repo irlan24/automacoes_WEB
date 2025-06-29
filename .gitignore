@@ -3,4 +3,6 @@ __pycache__
 dist
 display_playwright.py
 email_analista.py
+function.py
+tempCodeRunnerFile.py
 
