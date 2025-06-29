@@ -8,6 +8,7 @@ OBS-2: Antes de realizar a postagem de qualquer demonstrativo, foi solicitado au
 
 OBS-3: Tento ao máximo higienizar o código para que não esteja vísível informações sensiveis
 
+OBS-4: Os projetos estão hospedados na BRANCH MASTER
 
 ===================================== Branch Master =======================================
 
