@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from senhas import *
 from time import sleep
-from function import *
 import customtkinter as ctk
 import threading
 
@@ -194,15 +193,6 @@ def forms():
     navegador.maximize_window()
 
     # ================ login ==========
-    # email_salvo = campo_email.get() # salva o email digitado a uma variavel
-    # senha_salvo = campo_senha.get() # salva a senha digitada a uma variavel
-    # indicie_arroba = email_salvo.find("@")
-    # novo_texto = email_salvo[0:indicie_arroba]
-    # analista_email = novo_texto.replace(".", " ").title()
-
-    
-
-    # if len(list_case) == 0:
        
     try:
         # Espera o campo usuario aparecer e digita nele
@@ -247,42 +237,16 @@ def forms():
     
     
     iniciar_agora = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div')))  
-    iniciar_agora.click()  
-        
-
-    # else:
-        
-    #     # Espera o campo usuario aparecer e digita nele
-    #     usuario = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="email"]')))
-    #     usuario.send_keys(email_salvo)
-
-    #     # clica no botão avançar
-    #     sleep(0.5)
-    #     navegador.find_element("css selector", 'input[type="submit"]').click()
-        
-    #     # Espera o campo senha aparecer e digita nele
-    #     password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
-    #     password.send_keys(senha_salvo)
-
-    #     sleep(0.5)
-    #     # clica no botão Submit
-    #     navegador.find_element("css selector", 'input[type="submit"]').click()
-        
-    #     iniciar_agora = wait.until(EC.element_to_be_clickable((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div')))  
-    #     iniciar_agora.click() 
-
+    iniciar_agora.click() 
     
 
     # ===================== FORMS ==============
-
-    
     
 
     # Espera e marca o radio correspondente a equipe    
     equipe = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[type="radio"][value="Eduardo"]')))
 
     navegador.execute_script("arguments[0].click();", equipe) 
-
 
 
     # Espera e marca o radio correspondente ao analista
@@ -298,7 +262,6 @@ def forms():
 
 
     # Espera e marca o radio correspondente ao canal de entrada
-
     canal_entrada = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="SALESFORCE - (Casos)"]')))
     navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", canal_entrada)
     navegador.execute_script("arguments[0].click();", canal_entrada)
@@ -310,7 +273,7 @@ def forms():
     navegador.execute_script("arguments[0].click();", numero_caso)
 
     # Insere valor no campo
-    numero_caso.send_keys(num_caso)
+    numero_caso.send_keys(num_caso) # insere o valor recebido pelo Display
 
 
     # Abre opções do campo assunto
@@ -329,11 +292,10 @@ def forms():
     navegador.execute_script("arguments[0].click();", numero_cpf)
 
     # Insere valor no campo
-    numero_cpf.send_keys(num_cpf)
+    numero_cpf.send_keys(num_cpf) # insere o valor recebido pelo Display
 
 
     # Espera e marca o radio correspondente ao status atual
-
     of_open = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Aberto"]')))
     navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", of_open)
     navegador.execute_script("arguments[0].click();", of_open)
@@ -341,7 +303,7 @@ def forms():
 
     # ========================= TRANSFERIR FILA & FINALIZAR =================
 
-    if especial_radios.get() == "transferido": # Apenas se a opção "transferido" for marcada
+    if especial_radios.get() == "transferido": # Apenas se a opção "transferido" for marcada no display
 
         # Clica em transferir para outra fila
         for_transfer = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="Transferido para outro Grupo"]')))
@@ -364,7 +326,7 @@ def forms():
             navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", no_precedence)
             navegador.execute_script("arguments[0].click();", no_precedence)
 
-            # # opções disponíveis para resolução em 1° nível
+            # opções disponíveis para resolução em 1° nível
             first_level_resolution = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, option_resolution.get())))
             navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", first_level_resolution)
             navegador.execute_script("arguments[0].click();", first_level_resolution)
@@ -393,8 +355,8 @@ def forms():
             except: 
                 progress_bar.stop() # para progresso da barra
                 progress_bar.grid_forget() # oculta a barra        
-                texto_temporario("Formulário não foi ENVIADO!", "red")
-                # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+                # texto_temporario("Formulário não foi ENVIADO!", "red")
+                invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
                 submit.configure(state='normal') # Habilita botão
                 navegador.quit()# Fecha nevegador
         
@@ -431,8 +393,8 @@ def forms():
         except: 
             progress_bar.stop() # para progresso da barra
             progress_bar.grid_forget() # oculta a barra        
-            texto_temporario("Formulário não foi ENVIADO!", "red")
-            # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+            # texto_temporario("Formulário não foi ENVIADO!", "red")
+            invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
             submit.configure(state='normal') # Habilita botão
             navegador.quit()# Fecha nevegador
 
@@ -468,16 +430,15 @@ def forms():
             texto_temporario("Formulário enviado com sucesso!", "green")
             submit.configure(state='normal') # Habilita botão
             # Armazena o caso na PILHA (Histórico de casos)
-            save_case(num_caso)
+            save_case(num_caso) # Salva o número do caso no histórico
             navegador.quit() # Fecha nevegador
             
         except: 
             progress_bar.stop() # para progresso da barra
             progress_bar.grid_forget() # oculta a barra        
-            texto_temporario("Formulário não foi ENVIADO!", "red")
-            # invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
+            # texto_temporario("Formulário não foi ENVIADO!", "red")
+            invisible_element.configure(text="Formulário não foi ENVIADO!", text_color="red")
             submit.configure(state='normal') # Habilita botão
-            save_case(num_caso)
             navegador.quit()# Fecha nevegador
             
 
@@ -485,14 +446,16 @@ def forms():
 
 # ========== DISPLAY APP ============
 
+
+
 #=============== CONFIGURAÇÕES ===========
 
-# aparencia
+# Modo do tema
 ctk.set_appearance_mode('dark')
-# Tema
+# Cor do tema
 ctk.set_default_color_theme("green")
 
-# criando o display
+# criando o app
 app = ctk.CTk()
 
 # Definição do título
@@ -512,9 +475,6 @@ fonte = ctk.CTkFont(family="Arial", size=15, weight="bold", slant="italic", unde
 # Container da barra central do app
 box_frame_center = ctk.CTkFrame(master=app, corner_radius=10)
 box_frame_center.grid(row=0, column=1, padx=15, pady=10)
-
-
-
 
 # Criando label Produto
 label_produto = ctk.CTkLabel(box_frame_center, text='Digite o número do produto:\n\n[1] - Credcesta\n\n[2] - M fácil consignado', font=("Arial", 13, "bold"))
