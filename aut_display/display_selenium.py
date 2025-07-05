@@ -36,78 +36,30 @@ def forms():
     num_cpf = campo_cpf.get()
     produto = campo_produto.get()
     assunto = campo_assunto.get()
-    email_analista = campo_email.get()
+    email_analista = {      # todos os email/analista
+            "andiara.silva@credcesta.com.br": "Andiara Nunes",
+            "aracilma.portugal@credcesta.com.br": "Aracilma Portugal",
+            "angelina.neta@credcesta.com.br": "Angelina Neta",
+            "ana.silva@credcesta.com.br": "Ana Silva",
+            "beatriz.jesus@credcesta.com.br": "Beatriz Zacarias",
+            "ingrid.brito@credcesta.com.br": "Ingrid Brito",
+            "irlan.silva@credcesta.com.br": "Irlan Silva",
+            "jeferson.santos@credcesta.com.br": "Jeferson Santos",
+            "larissa.lima@credcesta.com.br": "Larissa Lima",
+            "lucas.santos@credcesta.com.br": "Lucas Alves",
+            "lucas.bsantos@credcesta.com.br": "Lucas Bispo",
+            "maria.santos@credcesta.com.br": "Maria Inês",
+            "rita.santos@credcesta.com.br": "Rita de Cassia",
+            "sheila.paranagua@credcesta.com.br": "Sheila Paranagua",
+            "sueli.alves@credcesta.com.br": "Sueli Santos",
+            "vivian.cunha@credcesta.com.br": "Vivian Cunha"
+        }
     
-
-    # Todas as opções de email conforme o analista
-    match email_analista:
-        # Andiara Nunes = andiara.silva@credcesta.com.br
-        case "andiara.silva@credcesta.com.br":
-            analista_email = "Andiara Nunes"
-
-        # Aracilma Portugal = aracilma.portugal@credcesta.com.br
-        case "aracilma.portugal@credcesta.com.br":
-            analista_email = "Aracilma Portugal"
-
-        # Angelina Neta = angelina.neta@credcesta.com.br
-        case "angelina.neta@credcesta.com.br":
-            analista_email = "Angelina Neta"  
-
-        # Ana Silva = ana.silva@credcesta.com.br
-        case "ana.silva@credcesta.com.br":
-            analista_email = "Ana Silva"
-
-        # Beatriz Zacarias = beatriz.jesus@credcesta.com.br
-        case "beatriz.jesus@credcesta.com.br":
-            analista_email = "Beatriz Zacarias"
-
-        # Ingrid Brito = ingrid.brito@credcesta.com.br
-        case "ingrid.brito@credcesta.com.br":
-            analista_email = "Ingrid Brito"
-
-        # Irlan Silva = irlan.silva@credcesta.com.br
-        case "irlan.silva@credcesta.com.br":
-            analista_email = "Irlan Silva" 
-
-        # Jeferson Santos = jeferson.santos@credcesta.com.br
-        case "jeferson.santos@credcesta.com.br":
-            analista_email = "Jeferson Santos"
-
-        # Larissa Lima = larissa.lima@credcesta.com.br
-        case "larissa.lima@credcesta.com.br":
-            analista_email = "Larissa Lima"
-
-        # Lucas Alves = lucas.santos@credcesta.com.br
-        case "lucas.santos@credcesta.com.br":
-            analista_email = "Lucas Alves"
-
-        # Lucas Bispo = lucas.bsantos@credcesta.com.br
-        case "lucas.bsantos@credcesta.com.br":
-            analista_email = "Lucas Bispo"  
-
-        # Maria Inês = maria.santos@credcesta.com.br
-        case "maria.santos@credcesta.com.br":
-            analista_email = "Maria Inês"                                        
-
-        # Rita de Cassia = rita.santos@credcesta.com.br
-        case "rita.santos@credcesta.com.br":
-            analista_email = "Rita de Cassia"
-
-        # Sheila Paranagua = sheila.paranagua@credcesta.com.br
-        case "sheila.paranagua@credcesta.com.br":
-            analista_email = "Sheila Paranagua" 
-
-        # Sueli Santos = sueli.alves@credcesta.com.br
-        case "sueli.alves@credcesta.com.br":
-            analista_email = "Sueli Santos"    
-
-        # Vivian Cunha = vivian.cunha@credcesta.com.br
-        case "vivian.cunha@credcesta.com.br":
-            analista_email = "Vivian Cunha" 
-
-
-
-
+    # Equiparando email digitado com o nome do analista
+    for email in email_analista:
+        if email == campo_email.get():
+            analista_email = email_analista[email]
+            
 
 
     # Condições e opções para os Produtos
@@ -350,6 +302,7 @@ def forms():
                 submit.configure(state='normal') # Habilita botão
                 # Armazena o caso na PILHA (Histórico de casos)
                 save_case(num_caso)
+                finalizados() # Retorna ao marco inicial
                 navegador.quit() # Fecha nevegador
                 
             except: 
@@ -388,6 +341,7 @@ def forms():
             submit.configure(state='normal') # Habilita botão
             # Armazena o caso na PILHA (Histórico de casos)
             save_case(num_caso)
+            finalizados() # Retorna ao marco inicial
             navegador.quit() # Fecha nevegador
             
         except: 
@@ -431,6 +385,7 @@ def forms():
             submit.configure(state='normal') # Habilita botão
             # Armazena o caso na PILHA (Histórico de casos)
             save_case(num_caso) # Salva o número do caso no histórico
+            finalizados() # Retorna ao marco inicial
             navegador.quit() # Fecha nevegador
             
         except: 
@@ -629,12 +584,14 @@ def transferidos():
 def finalizados():
     box_frame_1.grid_forget()
     box_frame_2.grid_forget()
+    especial_radios.set("finalizado")
+
 
 
 def cac():
          
-        if filas.get() == 'span[aria-label="CAC"]':
-            box_frame_2.grid(row=3, column=0, pady=20, sticky="nsew")
+    if filas.get() == 'span[aria-label="CAC"]':
+        box_frame_2.grid(row=3, column=0, pady=20, sticky="nsew")
 
 
 def outras_filas():
