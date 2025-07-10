@@ -20,16 +20,14 @@ def load():
 
 
 def texto_temporario(text_display='', color_display=''):
-    texto_original = ''
 
     invisible_element.configure(text=text_display, text_color=color_display)
 
-    app.after(7000, lambda: invisible_element.configure(text=texto_original))
+    app.after(7000, lambda: invisible_element.configure(text=""))
 
 
 
-def forms():    
-
+def forms(): 
 
     # Pegando indormações do display
     num_caso = campo_caso.get()
@@ -113,6 +111,8 @@ def forms():
                     assunto = assunto_3
                 case 4:
                     assunto = assunto_4
+                case 5:
+                    assunto = assunto_5
                 case _:
                     invisible_element.configure(text="Opção inválida para o Assunto\nInsira novamente!", text_color="red")
                     progress_bar.stop()
@@ -130,9 +130,9 @@ def forms():
 
     
     options = Options()
-    options.add_argument("--headless")  # Ativa o modo headless
-    options.add_argument("--disable-gpu")  # Recomendado para Windows
-    options.add_argument("--window-size=1920,1080")  # Tamanho fixo da janela (evita erros de renderização)
+    # options.add_argument("--headless")  # Ativa o modo headless
+    # options.add_argument("--disable-gpu")  # Recomendado para Windows
+    # options.add_argument("--window-size=1920,1080")  # Tamanho fixo da janela (evita erros de renderização)
 
     # inicia o navegador
     navegador = webdriver.Chrome(options=options)
@@ -431,42 +431,43 @@ fonte = ctk.CTkFont(family="Arial", size=15, weight="bold", slant="italic", unde
 box_frame_center = ctk.CTkFrame(master=app, corner_radius=10)
 box_frame_center.grid(row=0, column=1, padx=15, pady=10)
 
-# Criando label Produto
-label_produto = ctk.CTkLabel(box_frame_center, text='Digite o número do produto:\n\n[1] - Credcesta\n\n[2] - M fácil consignado', font=("Arial", 13, "bold"))
-label_produto.grid(row=0, column=0, pady=8, padx=10, sticky="n")
+# ========================================
+
+label_produto = ctk.CTkLabel(box_frame_center, text='Digite o número do produto:\n\n[1] - Credcesta\n[2] - M fácil consignado', font=("Arial", 13, "bold"))
+label_produto.grid(row=0, column=0, pady=7, padx=10, sticky="n")
 
 # Campo do Produto
 campo_produto = ctk.CTkEntry(box_frame_center, width= 250,placeholder_text='Digite o produto...')
-campo_produto.grid(row=1, column=0, pady=8, padx=10, sticky="n")
+campo_produto.grid(row=1, column=0, pady=7, padx=10, sticky="n")
 
 # ========================================
 
 # Criando label Caso
 label_caso = ctk.CTkLabel(box_frame_center, text='Número do Caso: ', font=("Arial", 13, "bold"))
-label_caso.grid(row=2, column=0, pady=8, padx=10)
+label_caso.grid(row=2, column=0, pady=7, padx=10)
 
 # Campo do Caso
 campo_caso = ctk.CTkEntry(box_frame_center, width= 250,placeholder_text='Digite o número do Caso...')
-campo_caso.grid(row=3, column=0, pady=8, padx=10)
+campo_caso.grid(row=3, column=0, pady=7, padx=10)
 
 # ========================================
 
 # Criando label CPF
 label_cpf = ctk.CTkLabel(box_frame_center, text='Número do CPF(apenas número): ', font=("Arial", 13, "bold"))
-label_cpf.grid(row=4, column=0, pady=8, padx=10)
+label_cpf.grid(row=4, column=0, pady=7, padx=10)
 
 # Campo do CPF
 campo_cpf = ctk.CTkEntry(box_frame_center, width= 250,placeholder_text='Digite o número do CPF...')
-campo_cpf.grid(row=5, column=0, pady=8, padx=10)
+campo_cpf.grid(row=5, column=0, pady=7, padx=10)
 
 # ========================================
 
 # Criando label Assunto principal
-label_assunto = ctk.CTkLabel(box_frame_center, text='Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n\n[2] - Cancelamento de Seguro Prestamista\n\n[3] - Reembolso de desconto indevido de Saque\n\n[4] - Desacordo comercial', font=("Arial", 13, "bold"))
-label_assunto.grid(row=6, column=0, pady=8, padx=10)
+label_assunto = ctk.CTkLabel(box_frame_center, text='Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n[2] - Cancelamento de Seguro Prestamista\n[3] - Reembolso de desconto indevido de Saque\n[4] - Desacordo comercial\n[5] - Cobrança indevida', font=("Arial", 13, "bold"))
+label_assunto.grid(row=6, column=0, pady=7, padx=10)
 
 campo_assunto = ctk.CTkEntry(box_frame_center,width=250,placeholder_text='Digite o assunto...')
-campo_assunto.grid(row=7, column=0, pady=8, padx=10)
+campo_assunto.grid(row=7, column=0, pady=7, padx=10)
 
 # ========================================
 
@@ -501,7 +502,7 @@ box_list_case.grid(padx=10, pady=10)
 def save_case(case):
     entry_list_case.configure(state="normal") # torna o campo editável temporárimente
     entry_list_case.insert("1.0", case + "\n") # insere ao inicio o conteúdo (n° do caso)   
-    app.after(0, lambda: entry_list_case.configure(state="disabled")) # Volta o campo para apenas visualização
+    entry_list_case.configure(state="disabled") # Volta o campo para apenas visualização
     
 
 # Titulo inicial
@@ -512,11 +513,15 @@ label_title.grid(row=0, column=0, pady=8, padx=10, sticky="w")
 entry_list_case = ctk.CTkTextbox(box_list_case, font=("Arial", 13, "bold"), state="disabled")
 entry_list_case.grid(row=1, column=0, pady=10, sticky="w")
 
+# Botão para limpar histórico dos casos
+clear_historic = ctk.CTkButton(box_frame_left, text= "Limpar histórico", command=lambda: entry_list_case.delete("1.0", "end"))
+clear_historic.grid(row=1, column=0, pady=5, padx=20, sticky="nsew")
+
 # =======
 
 # Segundo container da barra lateral esquerda para o login
 box_frame_login = ctk.CTkFrame(box_frame_left, corner_radius=10)
-box_frame_login.grid(row=1, column=0, padx=10, pady=10, sticky='s')
+box_frame_login.grid(row=2, column=0, padx=10, pady=10, sticky='s')
 
 # Titulo inicial
 label_title_login = ctk.CTkLabel(box_frame_login, text='ACESSO DO ANALISTA', font=fonte)
@@ -650,8 +655,8 @@ box_frame_2 = ctk.CTkFrame(box_frame_right, corner_radius=10)
 reembolso_sem_credor = ctk.CTkRadioButton(box_frame_2, text="Reembolso sem saldo credor", variable= option_resolution, value='input[value="Pedido de reembolso de Seguro ou Cartão em que não há saldo credor a reembolsar na fatura"]', font=("Arial", 10, "bold"))
 reembolso_sem_credor.grid(row=0, column=0, pady=10, padx=10, sticky="w")
 
-not_v3 = ctk.CTkRadioButton(box_frame_2, text="Sem cancelar no V3", variable= option_resolution, value='input[value="Pedido de cancelamento/reembolso da Proteção Premiada sem o devido comando de cancelamento no Plataforma"]', font=("Arial", 10, "bold"))
-not_v3.grid(row=1, column=0, pady=10, padx=10, sticky="w")
+baixa_pagamento = ctk.CTkRadioButton(box_frame_2, text="Baixa de pagamento sem comprovante", variable= option_resolution, value='input[value^="Pedido de baixa de pagamento sem envio do comprovante de pagamento"]', font=("Arial", 10, "bold"))
+baixa_pagamento.grid(row=1, column=0, pady=10, padx=10, sticky="w")
 
 in_10_day = ctk.CTkRadioButton(box_frame_2, text="Dentro dos 10 dias", variable= option_resolution, value='input[value="Pedido de reembolso de Saque dentro do prazo de 10 dias corridos para reembolso em lote"]', font=("Arial", 10, "bold"))
 in_10_day.grid(row=2, column=0, pady=10, padx=10, sticky="w")
