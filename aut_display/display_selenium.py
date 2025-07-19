@@ -25,12 +25,15 @@ class FormsApp:
         
         self.fonte = ctk.CTkFont(family="Arial", size=15, weight="bold", slant="italic", underline=True)
         
-        # Criar containers principais
+        # Chama os containers principais
         self.create_main_containers()
         self.create_form_fields()
         self.create_history_section()
         self.create_login_section()
         self.create_special_configs()
+        self.create_entry_section()
+        
+
         
     def create_main_containers(self):
         """Cria os containers principais da interface"""
@@ -94,23 +97,29 @@ class FormsApp:
         
     def create_history_section(self):
         """Cria a seção de histórico de casos"""
-        box_list_case = ctk.CTkScrollableFrame(self.box_frame_left, width=180, height=10)
-        box_list_case.grid(padx=10, pady=10)
+        self.box_history_section = ctk.CTkFrame(self.box_frame_left, corner_radius=10, width=210, height=180)
+        self.box_history_section.grid(padx=10, pady=10)
+        self.box_history_section.grid_propagate(False)
+
+        label_title = ctk.CTkLabel(self.box_history_section, text='HISTÓRICO DE CASOS', font=self.fonte)
+        label_title.grid(row=0, column=0, pady=5, padx=10, sticky="nswe")
+
+        box_list_case = ctk.CTkScrollableFrame(self.box_history_section, width=180)
+        box_list_case.grid(row=1, column=0, padx=5, pady=5, sticky="n")
+                
         
-        label_title = ctk.CTkLabel(box_list_case, text='HISTÓRICO DE CASOS', font=self.fonte)
-        label_title.grid(row=0, column=0, pady=8, padx=10, sticky="w")
 
         # Botão para limpar histórico (clear_historic)
-        ctk.CTkButton(self.box_frame_left, text= "Limpar histórico", command=lambda: self.entry_list_case.delete("1.0", "end")).grid(row=1, column=0, pady=5, padx=20, sticky="nsew")
+        ctk.CTkButton(self.box_frame_left, text= "Limpar histórico", command=self.delete_historic_case).grid(row=1, column=0, pady=5, padx=15, sticky="nsew")
         
         
         self.entry_list_case = ctk.CTkTextbox(box_list_case, font=("Arial", 13, "bold"), state="disabled")
-        self.entry_list_case.grid(row=1, column=0, pady=10, sticky="w")
+        self.entry_list_case.grid(row=0, column=0, pady=10, sticky="w")
         
     def create_login_section(self):
         """Cria a seção de login"""
         box_frame_login = ctk.CTkFrame(self.box_frame_left, corner_radius=10)
-        box_frame_login.grid(row=2, column=0, padx=10, pady=10, sticky='s')
+        box_frame_login.grid(row=2, column=0, padx=10, pady=5, sticky='s')
         
         label_title_login = ctk.CTkLabel(box_frame_login, text='ACESSO DO ANALISTA', font=self.fonte)
         label_title_login.grid(row=0, column=0, pady=8, padx=10, sticky="n")
@@ -130,6 +139,39 @@ class FormsApp:
         
         self.label_invisible_login = ctk.CTkLabel(box_frame_login, text='', font=("Arial", 15, "bold"))
         self.label_invisible_login.grid(row=2, column=0, pady=8, padx=5, sticky="w")
+
+
+    def create_entry_section(self):
+        """Cria a seção do canal de entrada """        
+        ctk.CTkLabel(self.box_frame_left, text='CANAL DE ENTRADA', font=self.fonte).grid(row=3, column=0, pady=2, padx=10, sticky="nswe")
+
+        self.box_entry_section = ctk.CTkFrame(self.box_frame_left, corner_radius=10)
+        self.box_entry_section.grid(row=4, column=0, pady=1, padx=20, sticky="nsew")
+
+        # Variável de controle para armazenar a opção selecionada
+        self.opcao_selecionada = None
+
+        # Lista para armazenar os botões
+        self.botoes = {}
+
+        # Criando botões como opções
+        opcoes = ["SALESFORCE - (Casos)", "CANAIS CRÍTICOS (SALESFORCE)", "OUVIDORIA (SALESFORCE)"]
+        for i, opcao in enumerate(opcoes):
+            botao = ctk.CTkButton(self.box_entry_section, text=opcao, command=lambda o=opcao: self.selecionar(o))
+            botao.grid(row=i, column=0, padx=10, pady=10, sticky='nswe')
+            self.botoes[opcao] = botao
+
+    def selecionar(self, opcao):
+        self.opcao_selecionada = opcao
+        for chave, valor in self.botoes.items():
+            if chave == opcao:
+                valor.configure(fg_color="green")  # botão ativo
+            else:
+                valor.configure(fg_color="gray")   # desativa os outros
+
+        self.canal_entrada = self.opcao_selecionada
+
+        
         
     def create_special_configs(self):
         """Cria a seção de configurações especiais"""
@@ -193,6 +235,13 @@ class FormsApp:
             self.box_frame_2.grid(row=3, column=0, pady=20, sticky="nsew")
         else:
             self.box_frame_2.grid_forget()
+
+    def get_analista_name(self, email):
+        """Retorna o nome do analista baseado no email"""
+
+        analistas = all_analist # variavel com dicionário de todos os emails
+
+        return analistas.get(email, "")
     
     
     def validate_and_get_options(self, produto_val, assunto_val):
@@ -250,7 +299,13 @@ class FormsApp:
         """Salva o caso no histórico"""
         self.entry_list_case.configure(state="normal")
         self.entry_list_case.insert("1.0", case + "\n")
-        self.app.after(0, lambda: self.entry_list_case.configure(state="disabled"))
+        self.entry_list_case.configure(state="disabled")
+
+    def delete_historic_case(self):
+        """Deleta o histórico dos casos """
+        self.entry_list_case.configure(state="normal")
+        self.entry_list_case.delete("1.0", "end")
+        self.entry_list_case.configure(state="disabled")
     
     def setup_browser(self):
         """Configura e inicializa o navegador"""
@@ -313,7 +368,7 @@ class FormsApp:
         self.navegador.execute_script("arguments[0].click();", select_produt)
         
         # Seleciona canal de entrada
-        canal_entrada = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'input[value="SALESFORCE - (Casos)"]')))
+        canal_entrada = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,f'input[value="{self.canal_entrada}"]')))
         self.navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", canal_entrada)
         self.navegador.execute_script("arguments[0].click();", canal_entrada)
         
