@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -7,6 +8,7 @@ from senhas import *
 from time import sleep
 import customtkinter as ctk
 import threading
+import webbrowser
 
 class FormsApp:
     def __init__(self):
@@ -32,26 +34,39 @@ class FormsApp:
         self.create_login_section()
         self.create_special_configs()
         self.create_entry_section()
+
+        # Chama o container de assinatura do app
+        self.create_signature()
         
 
         
     def create_main_containers(self):
         """Cria os containers principais da interface"""
         self.box_frame_center = ctk.CTkFrame(master=self.app, corner_radius=10)
-        self.box_frame_center.grid(row=0, column=1, padx=15, pady=10)
+        self.box_frame_center.grid(row=1, column=1, padx=15, pady=10)
         
         self.box_frame_left = ctk.CTkFrame(master=self.app, corner_radius=10)
-        self.box_frame_left.grid(row=0, column=0, padx=10, pady=10, sticky='n')
+        self.box_frame_left.grid(row=1, column=0, padx=10, pady=10, sticky='n')
         
         self.box_frame_right = ctk.CTkFrame(self.app, corner_radius=10)
-        self.box_frame_right.grid(row=0, column=3, padx=10, pady=10, sticky="n")
+        self.box_frame_right.grid(row=1, column=3, padx=10, pady=10, sticky="n")
+
+
+    def create_signature(self):
+        self.assinatura = ctk.CTkLabel(self.app, text="Desenvolvido por: Irlan Nonato (Click para conhecer)", font=("Arial", 11, "bold"), text_color="red", cursor="hand2" )        
+        self.assinatura.grid(row=0, column=0, padx=5, pady=2, sticky="w")
+
+        self.assinatura.bind("<Button-1>", self.link_external) # quando clicar
+        self.assinatura.bind("<Enter>", self.link_external_on)  # Quando o mouse entra
+        self.assinatura.bind("<Leave>", self.link_external_off)  # Quando o mouse sai
+
         
     def create_form_fields(self):
         """Cria os campos do formulário principal"""
         # Dicionário com configurações dos campos
         fields_config = {
             'produto': {
-                'label': 'Digite o número do produto:\n\n[1] - Credcesta\n[2] - M fácil consignado',
+                'label': 'Digite o número do produto:\n\n[1] - Credcesta\n[2] - M fácil consignado\n[3] - Empréstimo',
                 'placeholder': 'Digite o produto...',
                 'row_label': 0, 'row_field': 1
             },
@@ -66,7 +81,7 @@ class FormsApp:
                 'row_label': 4, 'row_field': 5
             },
             'assunto': {
-                'label': 'Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n[2] - Cancelamento de Seguro Prestamista\n[3] - Reembolso de desconto indevido de Saque\n[4] - Desacordo comercial\n[5] - Baixa de Pagamento (desconto em folha)\n[6] - Cobrança indevida\n\n[7] - Contrato/CCB\n[8] - Criação de conta na Orbitall',
+                'label': 'Digite o número do Assunto:\n\n[1] - Reembolso - Seguro Prestamista\n[2] - Cancelamento de Seguro Prestamista\n[3] - Reembolso de desconto indevido de Saque\n[4] - Desacordo comercial\n[5] - Baixa de Pagamento (desconto em folha)\n[6] - Cobrança indevida\n\n[7] - Contrato/CCB\n[8] - Criação de conta na Orbitall\n[9] - Voce Pode Saúde\n[10] - Dúvidas sobre desconto em folha\n[11] - Comprovante de quitação do S.F.',
                 'placeholder': 'Digite o assunto...',
                 'row_label': 6, 'row_field': 7
             }
@@ -77,11 +92,11 @@ class FormsApp:
         for field_name, config in fields_config.items():
             # Label
             label = ctk.CTkLabel(self.box_frame_center, text=config['label'], font=("Arial", 13, "bold"))
-            label.grid(row=config['row_label'], column=0, pady=8, padx=10, sticky="n")
+            label.grid(row=config['row_label'], column=0, pady=3, padx=10, sticky="n")
             
             # Campo de entrada
             campo = ctk.CTkEntry(self.box_frame_center, width=250, placeholder_text=config['placeholder'])
-            campo.grid(row=config['row_field'], column=0, pady=8, padx=10, sticky="n")
+            campo.grid(row=config['row_field'], column=0, pady=5, padx=10, sticky="n")
             
             self.campos[field_name] = campo
         
@@ -102,10 +117,21 @@ class FormsApp:
         self.box_history_section.grid_propagate(False)
 
         label_title = ctk.CTkLabel(self.box_history_section, text='HISTÓRICO DE CASOS', font=self.fonte)
-        label_title.grid(row=0, column=0, pady=5, padx=10, sticky="nswe")
+        label_title.grid(row=0, column=0, pady=2, padx=10, sticky="nswe")
+
+         # Fonte do quantificador
+        font_quantificador = ctk.CTkFont(family="Arial", size=12, weight="bold", slant="italic", underline=False)
+
+        # Quantficador de casos realizados
+        self.list_quantificador = []
+
+        self.label_quant_case = ctk.CTkLabel(self.box_history_section, text=f'N° de casos concluídos: {len(self.list_quantificador)}', font=font_quantificador)
+        self.label_quant_case.grid(row=1, column=0, pady=1, padx=10, sticky="nswe")
+
+
 
         box_list_case = ctk.CTkScrollableFrame(self.box_history_section, width=180)
-        box_list_case.grid(row=1, column=0, padx=5, pady=5, sticky="n")
+        box_list_case.grid(row=2, column=0, padx=2, pady=3, sticky="n")
                 
         
 
@@ -198,6 +224,7 @@ class FormsApp:
             ("Backoffice Seguros", 'span[aria-label="Backoffice Seguros"]'),
             ("Backoffice Único", 'span[aria-label="Backoffice Único"]'),
             ("Backoffice Controle Financeiro", 'span[aria-label="Backoffice Controle Financeiro"]'),
+            ("Backoffice Conciliação", 'span[aria-label="Backoffice Conciliação"] '),
             ("CAC", 'span[aria-label="CAC"]')
         ]
         
@@ -250,8 +277,9 @@ class FormsApp:
             produto_num = int(produto_val)
             assunto_num = int(assunto_val)
             
-            produtos = {1: produto_1, 2: produto_2}
-            assuntos = {1: assunto_1, 2: assunto_2, 3: assunto_3, 4: assunto_4, 5: assunto_5, 6: assunto_6, 7: assunto_7, 8: assunto_8}
+            produtos = {1: produto_1, 2: produto_2, 3: produto_3}
+            
+            assuntos = {1: assunto_1, 2: assunto_2, 3: assunto_3, 4: assunto_4, 5: assunto_5, 6: assunto_6, 7: assunto_7, 8: assunto_8, 9: assunto_9, 10: assunto_10, 11: assunto_11}
             
             if produto_num not in produtos:
                 raise ValueError("Produto inválido")
@@ -276,6 +304,9 @@ class FormsApp:
         """Exibe mensagem de sucesso e salva caso"""
         self.progress_bar.stop()
         self.progress_bar.grid_forget()
+        self.box_frame_1.grid_forget()
+        self.box_frame_2.grid_forget()
+        self.especial_radios.set("finalizado")
         self.texto_temporario(message, "green")
         self.submit.configure(state='normal')
         self.save_case(num_caso)
@@ -301,16 +332,33 @@ class FormsApp:
         self.entry_list_case.insert("1.0", case + "\n")
         self.entry_list_case.configure(state="disabled")
 
+        # Incrementa o quantificador de casos
+        self.list_quantificador.append(case)
+        self.label_quant_case.configure(text=f'N° de casos cloncluídos: {len(self.list_quantificador)}')
+
+
     def delete_historic_case(self):
         """Deleta o histórico dos casos """
         self.entry_list_case.configure(state="normal")
         self.entry_list_case.delete("1.0", "end")
         self.entry_list_case.configure(state="disabled")
+
+
+    def link_external(self, event=None):
+
+        webbrowser.open("https://www.linkedin.com/in/irlan24/")
+
+    def link_external_on(self, event):
+        self.assinatura.configure(text_color="blue")
+    
+    def link_external_off(self, event):
+        self.assinatura.configure(text_color="red")
+
     
     def setup_browser(self):
         """Configura e inicializa o navegador"""
         options = Options()
-        options.add_argument("--headless")
+        options.add_argument("--headless=new")
         options.add_argument("--disable-gpu")
         options.add_argument("--window-size=1920,1080")
         
@@ -320,29 +368,50 @@ class FormsApp:
     def perform_login(self, wait, email, senha):
         """Realiza o processo de login"""
         try:
-            # Campo email
-            usuario = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="email"]')))
-            usuario.send_keys(email)
-            
-            sleep(0.5)
-            self.navegador.find_element("css selector", 'input[type="submit"]').click()
-            
-            WebDriverWait(self.navegador, 3).until(
-                EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Insira a senha')]"))
-            )
-            
-            # Campo senha
-            password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
-            password.send_keys(senha)
-            
-            sleep(0.5)
-            self.navegador.find_element("css selector", 'input[type="submit"]').click()
-            
-            WebDriverWait(self.navegador, 3).until(
-                EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div'))
-            )
-            
-            return True
+            try:
+                # Campo login (Email sem botão submit)
+                usuario = wait.until(EC.presence_of_element_located((By.XPATH, f'//small[contains(text(), "{self.campo_email.get()}")]')))
+                self.navegador.execute_script("arguments[0].click();", usuario)
+
+                # Campo senha
+                password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
+                password.send_keys(senha)
+                
+                sleep(0.5)
+                self.navegador.find_element("css selector", 'input[type="submit"]').click()
+                
+                WebDriverWait(self.navegador, 3).until(
+                    EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div'))
+                )
+
+                return True
+            except:
+
+
+                # Campo email
+                usuario = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="email"]')))
+                usuario.send_keys(email)
+                
+                sleep(0.5)
+                self.navegador.find_element("css selector", 'input[type="submit"]').click()
+                
+                WebDriverWait(self.navegador, 3).until(
+                    EC.presence_of_element_located((By.XPATH, "//*[contains(text(), 'Insira a senha')]"))
+                )
+                
+                
+                # Campo senha
+                password = wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="password"]')))
+                password.send_keys(senha)
+                
+                sleep(0.5)
+                self.navegador.find_element("css selector", 'input[type="submit"]').click()
+                
+                WebDriverWait(self.navegador, 3).until(
+                    EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div[3]/div[4]/button/div'))
+                )
+                
+                return True
             
         except Exception as e:
             return False
@@ -448,7 +517,7 @@ class FormsApp:
     
     def submit_form(self, wait, num_caso):
         """Submete o formulário e verifica confirmação"""
-        submit_button = wait.until(EC.presence_of_element_located((By.XPATH,'//*[@id="form-main-content1"]/div/div/div[2]/div[4]/div/button')))
+        submit_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'button[data-automation-id="submitButton"]')))
         self.navegador.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_button)
         self.navegador.execute_script("arguments[0].click();", submit_button)
         
@@ -491,7 +560,7 @@ class FormsApp:
         try:
             wait = self.setup_browser()
             self.navegador.get(link_forms)
-            self.navegador.maximize_window()
+            # self.navegador.maximize_window()
             
             # Realiza login
             if not self.perform_login(wait, email_analista, self.campo_senha.get()):
