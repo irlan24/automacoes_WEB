@@ -51,7 +51,7 @@ Primeiro módulo funcional desenvolvida na interface gráfica (erro campo em bra
 ![Campo em branco](https://github.com/irlan24/automacoes_WEB/blob/master/forms_app/funcionamento_img/campo_em_branco.png)
 
 Primeiro módulo funcional desenvolvida na interface gráfica (erro opção inválida)
-![Opção inválida](https://github.com/irlan24/automacoes_WEB/blob/master/aforms_app/funcionamento_img/opcao_invalida.png)
+![Opção inválida](https://github.com/irlan24/automacoes_WEB/blob/master/forms_app/funcionamento_img/opcao_invalida.png)
 
 Primeiro módulo funcional desenvolvida na interface gráfica (Tela de carregamento durante funcionamento)
 ![Thread carregamento](https://github.com/irlan24/automacoes_WEB/blob/master/forms_app/funcionamento_img/thread_carregamento.png)
