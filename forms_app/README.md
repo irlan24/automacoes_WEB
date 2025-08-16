@@ -86,6 +86,8 @@ Implantação de bloco no segundo módulo da interface gráfica (Erro no e-mail)
 Implantação de bloco no segundo módulo da interface gráfica (Erro na senha)
 ![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/forms_app/funcionamento_img/att_segunda_coluna_4.png)
 
+Implantação de bloco no segundo módulo da interface gráfica (CANAL DE ENTRADA)
+![forms enviado](https://github.com/irlan24/automacoes_WEB/blob/master/forms_app/funcionamento_img/att_segunda_coluna_5.png)
 
 ## 🔗 Links
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://github.com/irlan24?tab=repositories)
