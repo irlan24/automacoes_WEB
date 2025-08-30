@@ -59,9 +59,9 @@ pip install selenium customtkinter webdriver-manager
 ### Configuração Inicial
 
 1. **Edite o arquivo `constants.py`**:
-   - Substitua `LINK_FORMS` pela URL real do formulário
-   - Atualize o dicionário `ALL_ANALYSTS` com os dados reais dos analistas
-   - Ajuste os seletores CSS/XPath conforme necessário
+   - `LINK_FORMS` URL real do formulário
+   - Atualizações do dicionário `ALL_ANALYSTS` com os dados reais dos analistas
+   - Ajustes dos seletores CSS/XPath conforme necessário
 
 2. **ChromeDriver**:
    - Certifique-se de ter o ChromeDriver instalado e no PATH
@@ -96,6 +96,7 @@ pip install selenium customtkinter webdriver-manager
 - Validação de produtos e assuntos
 - Autenticação de analistas
 - Verificação de canal de entrada
+- Verificação de escolha individual"transferido/pendente"
 
 ### Histórico
 - Contador de casos processados
@@ -153,4 +154,9 @@ Para contribuir com o projeto:
 
 ## Versão
 
-Versão atual: v2.0
+Versão atual: v3.0
+
+## Screenshots das funcionalidades
+
+Primeiro módulo funcional desenvolvida na interface gráfica (erro campo em branco)
+![Campo em branco](https://github.com/irlan24/automacoes_WEB/blob/master/forms_project/funcionamento_img/coluna_final_pending.png)
