@@ -158,5 +158,4 @@ Versão atual: v3.0
 
 ## Screenshots das funcionalidades
 
-Primeiro módulo funcional desenvolvida na interface gráfica (erro campo em branco)
 ![Campo em branco](https://github.com/irlan24/automacoes_WEB/blob/master/forms_project/funcionamento_img/coluna_final_pending.png)
